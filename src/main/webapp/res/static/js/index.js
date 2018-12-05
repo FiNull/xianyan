@@ -36,6 +36,8 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                     </div>
                 `);
                 }
+                // 取消所有事件
+                $('.like').unbind();
                 // 点赞文章
                 $('.like').on('click',function () {
                     animations.starArticle(this);

@@ -63,6 +63,8 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 `);
                 }
 
+                // 取消点击事件
+                $('.comment-like').unbind();
                 // 点赞评论
                 $('.comment-like').on('click',function () {
                     animations.starComment(this);
@@ -126,6 +128,8 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 $('.comment-txt').val('');
                 currentNum ++;
 
+                // 取消点击事件
+                $('.comment-like').unbind();
                 // 点赞评论
                 $('.comment-like').on('click',function () {
                     animations.starComment(this);
