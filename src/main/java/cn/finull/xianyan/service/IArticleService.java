@@ -14,12 +14,13 @@ public interface IArticleService extends Service {
 
     /**
      * 查找所有文章
+     * @param keyword 关键字
      * @param currNum 当前文章数
      * @param len 要查询的数量
      * @param userId 当前用户ID，游客传入null
      * @return 所有文章
      */
-    List<ArticleVO> findAll(int currNum,int len,String userId);
+    List<ArticleVO> findAll(String keyword,int currNum,int len,String userId);
 
     /**
      * 查询指定用户的所有文章

@@ -9,9 +9,16 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
     // 当前页面数据个数
     let currentNum = 0;
 
+    // 截取关键字
+    const url = window.location.href;
+    const keyword = url.indexOf('?') >= 0 ? url.substring(url.indexOf('?') + 1).split("=")[1] : '';
+
     function getArticles() {
         http.get({
             url: `/articles/${currentNum}/5`,
+            data: {
+                keyword
+            },
             success: function (data) {
                 if (!data.length) {
                     let $btn = $('.addition');

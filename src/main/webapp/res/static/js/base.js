@@ -4,4 +4,4 @@ layui.config({
     http: 'http',
     _util: '_util',
     animations: 'animations'
-}).use(['animations','login']);
+}).use(['animations','header']);

@@ -52,8 +52,9 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public List<ArticleVO> findAll(int currNum, int len, String userId) {
-        List<Article> articleList = iArticleDao.selectAll(currNum, len);
+    public List<ArticleVO> findAll(String keyword,int currNum, int len, String userId) {
+        String key = "%" + (keyword == null ? "" : keyword.trim()) + "%";
+        List<Article> articleList = iArticleDao.selectAll(key,key,currNum, len);
         return generatorArticleVOList(articleList,userId);
     }
 

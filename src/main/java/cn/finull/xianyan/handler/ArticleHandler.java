@@ -39,10 +39,11 @@ public class ArticleHandler implements Handler {
      * @return 文章列表
      */
     public ResponseEntity<List<ArticleVO>> findAll(Parameter p) {
+        String keyword = p.body().byName("keyword");
         int curNum = p.body().intByName("currentNum");
         int len = p.body().intByName("len");
         return new ResponseEntity<>(
-                iArticleService.findAll(curNum,len,getUserId(p)));
+                iArticleService.findAll(keyword,curNum,len,getUserId(p)));
     }
 
     /**

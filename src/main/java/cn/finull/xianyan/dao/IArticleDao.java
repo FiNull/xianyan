@@ -9,9 +9,9 @@ public interface IArticleDao extends BaseDao<Article> {
 
     @Select("SELECT `id`,`title`,`content`,`text`,`main_pic`,`read_num`,`star_num`," +
             "`author_id`,`del_status`,`save_time`,`update_time` FROM `articles` " +
-            "WHERE `del_status` = 1 ORDER BY `save_time` DESC " +
+            "WHERE `del_status` = 1 AND (`title` LIKE ? OR `text` LIKE ?) ORDER BY `save_time` DESC " +
             "LIMIT ?,?;")
-    List<Article> selectAll(int curNum,int len);
+    List<Article> selectAll(String keyword1, String keyword2, int curNum, int len);
 
     @Select("SELECT `id`,`title`,`content`,`text`,`main_pic`,`read_num`,`star_num`," +
             "`author_id`,`del_status`,`save_time`,`update_time` FROM `articles` " +
