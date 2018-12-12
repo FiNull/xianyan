@@ -68,6 +68,8 @@ layui.define(['jquery','layer','_util','http'],function(exports){
     // 动画模块
     var animations = {
         updateStar($this) {
+            const $starNum = $this.children('em');
+
             if (!$this.hasClass('layblog-this')) {
                 $this.text = '已赞';
                 $this.addClass('layblog-this');
@@ -85,7 +87,10 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 layer.msg('点赞成功', {
                     icon: 6
                     ,time: 1000
-                })
+                });
+                if ($starNum) {
+                    $starNum.text(Number($starNum.text()) + 1);
+                }
             }
             else {
                 $this.text = '点赞';
@@ -104,7 +109,10 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 layer.msg('已取消', {
                     icon: 6
                     ,time: 1000
-                })
+                });
+                if ($starNum) {
+                    $starNum.text(Number($starNum.text()) - 1);
+                }
             }
         },
         // 点赞文章

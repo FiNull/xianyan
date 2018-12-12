@@ -23,7 +23,6 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 </div>
             </div>
             `);
-
             // 点赞文章
             $('.article-like').on('click',function () {
                 animations.starArticle(this);
