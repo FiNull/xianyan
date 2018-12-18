@@ -1,0 +1,39 @@
+
+.main {
+    margin-top: 30px;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.main .photo {
+    float: left;
+    display: block;
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid #1E9FFF;
+}
+
+.main .content {
+    float: left;
+    margin-left: 20px;
+}
+
+.main .content .title {
+    font-size: 30px;
+}
+
+.main .content .info {
+    text-align: center;
+}
+
+.main .content .info i {
+    font-size: 20px;
+    color: #EA6F5A;
+}
+
+.times-line {
+    padding-top: 10px;
+}

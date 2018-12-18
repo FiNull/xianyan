@@ -20,6 +20,7 @@ public class HandlerConfig extends RequestHandlerInitialize {
                 .put("/user",userHandler::updateUserInfo)
                 .get("/user/articles/:userId/:currentNum/:len",
                         userHandler::articles)
+                .get("/user/id/:id",userHandler::userInfo)
                 .end();
         // 文件模块
         FileHandler fileHandler = get(FileHandler.class);

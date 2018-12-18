@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/res/layui/css/layui.css">
     <link rel="stylesheet" href="/res/static/css/mian.css">
+    <link rel="stylesheet" href="/res/static/css/user-info.css">
 </head>
 <body class="lay-blog">
     <div class="header">
@@ -46,7 +47,24 @@
     </div>
     <div class="container-wrap">
         <div class="container">
-            <!-- TODO -->
+            <div class="main">
+                <img src="" class="photo" alt="240"/>
+                <div class="content">
+                    <div class="title">
+                        <span class="username"></span>
+                    </div>
+                    <div class="info">
+                        <!--<i class="layui-icon">&#xe662;</i>-->
+                        <!--<i class="layui-icon">&#xe661;</i>-->
+                    </div>
+                </div>
+            </div>
+            <div class="times-line">
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>动态</legend>
+                </fieldset>
+                <ul class="layui-timeline flow-default" id="articles"></ul>
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -59,5 +77,6 @@
     </div>
     <script src="/res/layui/layui.js"></script>
     <script src="/res/static/js/base.js"></script>
+    <script src="/res/static/js/user-info.js"></script>
 </body>
 </html>

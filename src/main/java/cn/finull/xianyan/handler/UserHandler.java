@@ -123,4 +123,17 @@ public class UserHandler implements Handler {
         List<ArticleVO> articleVOList = iArticleService.findAllByUserId(userId,currNum,len,getUserId(p));
         return new ResponseEntity<>(articleVOList);
     }
+
+    /**
+     * 根据ID获取用户信息
+     * @return
+     */
+    public ResponseEntity userInfo(Parameter p) {
+        String userId = p.body().byName("id");
+        UserVO userVO = iUserService.userInfo(userId);
+        if (userVO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND,null);
+        }
+        return new ResponseEntity<>(HttpStatus.OK,userVO);
+    }
 }

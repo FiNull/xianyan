@@ -27,6 +27,17 @@ public class UserServiceImpl implements IUserService {
         return result > 0;
     }
 
+    private UserVO generatorUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        ObjectUtil.copyObject(user,userVO);
+        userVO.setPhoto(AppConfig.getHttpPrefix() + userVO.getPhoto());
+        userVO.setId(HashIDUtil.encode(user.getId()));
+        return userVO;
+    }
+
     @Override
     public UserVO register(UserBO userBO) {
         User user = new User();
@@ -38,10 +49,7 @@ public class UserServiceImpl implements IUserService {
         UserVO userVO = null;
         if (result > 0) {
             user = iUserDao.selectById(user.getId());
-            userVO = new UserVO();
-            ObjectUtil.copyObject(user,userVO);
-            userVO.setPhoto(AppConfig.getHttpPrefix() + userVO.getPhoto());
-            userVO.setId(HashIDUtil.encode(user.getId()));
+            userVO = generatorUserVO(user);
         }
         return userVO;
     }
@@ -51,10 +59,7 @@ public class UserServiceImpl implements IUserService {
         User user = iUserDao.selectByUserName(username);
         UserVO userVO = null;
         if (user != null && BCrypt.checkpw(password,user.getPassword())) {
-            userVO = new UserVO();
-            ObjectUtil.copyObject(user,userVO);
-            userVO.setPhoto(AppConfig.getHttpPrefix() + userVO.getPhoto());
-            userVO.setId(HashIDUtil.encode(user.getId()));
+            userVO = generatorUserVO(user);
         }
         return userVO;
     }
@@ -71,12 +76,16 @@ public class UserServiceImpl implements IUserService {
             int result = iUserDao.update(user);
             if (result > 0) {
                 user = iUserDao.selectById(userId);
-                userVO = new UserVO();
-                ObjectUtil.copyObject(user,userVO);
-                userVO.setPhoto(AppConfig.getHttpPrefix() + userVO.getPhoto());
-                userVO.setId(HashIDUtil.encode(user.getId()));
+                userVO = generatorUserVO(user);
             }
         }
         return userVO;
+    }
+
+    @Override
+    public UserVO userInfo(String userId) {
+        Long id = HashIDUtil.decode(userId);
+        User user = iUserDao.selectById(id);
+        return generatorUserVO(user);
     }
 }

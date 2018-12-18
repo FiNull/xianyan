@@ -84,6 +84,15 @@ layui.define(['jquery','form','http'],function (exports) {
     `;
 
     let _util = {
+        dateFormatStr(val) {
+            let date = new Date(val);
+            let year = date.getFullYear(),
+                month = date.getMonth() + 1,//月份是从0开始的
+                day = date.getDate(),
+                hour = date.getHours(),
+                min = date.getMinutes();
+            return `${year}年${month < 10 ? '0' + month : month}月${day < 10 ? '0' + day : day}日 ${hour < 10 ? '0'+hour : hour}时${min < 10 ? '0'+min : min}分`;
+        },
         dateFormat(val) {
             let date = new Date(val);
             let year = date.getFullYear(),
