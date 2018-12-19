@@ -46,7 +46,10 @@ layui.use(['layedit','_util','http','jquery','layer'], function(){
             return;
         }
 
-        var mainPic = $(content).find('img').attr('alt');
+        var mainPic = $('<body>' + content + '</body>').find('img').attr('alt');
+        if (mainPic && mainPic.startsWith('[') && mainPic.endsWith(']')) {
+            mainPic = '';
+        }
         http.post({
             url: '/article',
             data: JSON.stringify({

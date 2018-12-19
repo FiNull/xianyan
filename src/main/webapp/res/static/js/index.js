@@ -1,10 +1,19 @@
 
-layui.use(['http','jquery','_util','layer','animations'],function () {
+layui.use(['http','jquery','_util','layer','animations','carousel'],function () {
     let http = layui.http;
     let $ = layui.$;
     let _util = layui._util;
     let layer = layui.layer;
     let animations = layui.animations;
+    let carousel = layui.carousel;
+
+    //图片轮播
+    carousel.render({
+        elem: '#banner'
+        ,width: '750px'
+        ,height: '340px'
+        ,interval: 5000
+    });
 
     // 当前页面数据个数
     let currentNum = 0;
