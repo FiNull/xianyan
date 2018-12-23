@@ -11,7 +11,7 @@ layui.use(['http','jquery','_util','layer','animations','carousel'],function () 
     carousel.render({
         elem: '#banner'
         ,width: '750px'
-        ,height: '340px'
+        ,height: '300px'
         ,interval: 5000
     });
 
