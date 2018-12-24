@@ -41,8 +41,8 @@ layui.use(['layedit','_util','http','jquery','layer'], function(){
             layer.msg('正文不能为空',{time:2000,icon:6});
             return;
         }
-        if (content.length > 2000) {
-            layer.msg('正文不能超过2000字符',{time:2000,icon:6});
+        if (content.length > 10000) {
+            layer.msg('正文不能超过10000字符',{time:2000,icon:6});
             return;
         }
 

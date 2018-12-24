@@ -7,8 +7,6 @@ import cn.finull.framework.db.annotation.Transactional;
 import cn.finull.framework.db.orm.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;

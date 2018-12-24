@@ -1,7 +1,6 @@
 package cn.finull.xianyan.service.impl;
 
 import cn.finull.framework.config.AppConfig;
-import cn.finull.framework.db.annotation.Transactional;
 import cn.finull.framework.util.HashIDUtil;
 import cn.finull.framework.util.ObjectUtil;
 import cn.finull.framework.util.StringUtil;
