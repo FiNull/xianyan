@@ -19,7 +19,8 @@ layui.use(['http','jquery','_util','layer','animations','carousel'],function () 
     let currentNum = 0;
 
     // 截取关键字
-    const url = window.location.href;
+    let url = window.location.href;
+    url = decodeURI(url);
     const keyword = url.indexOf('?') >= 0 ? url.substring(url.indexOf('?') + 1).split("=")[1] : '';
 
     function getArticles() {
