@@ -2,6 +2,7 @@ package cn.finull.framework.core.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -14,9 +15,10 @@ public class Router {
     private static final Logger LOG = LoggerFactory.getLogger(Router.class);
 
     // 路由映射
-    private Map<URI,Function> mapping = new HashMap<>();
+    private Map<URI, Function> mapping = new HashMap<>();
 
-    private Router() {}
+    private Router() {
+    }
 
     private static Router ROUTER;
 
@@ -32,7 +34,7 @@ public class Router {
     public Function handler(URI uri) {
         Function h = mapping.get(uri);
         if (h == null) {
-            for (Map.Entry<URI,Function> entry : mapping.entrySet()) {
+            for (Map.Entry<URI, Function> entry : mapping.entrySet()) {
                 if (entry.getKey().equals(uri)) {
                     return entry.getValue();
                 }
@@ -59,40 +61,40 @@ public class Router {
         return this;
     }
 
-    private Router set(String method,String uri,Function function) {
-        mapping.put(new URI(method,moduleUri + uri),function);
-        LOG.info("load uri ==> [method: {}][uri: {}]",method,moduleUri + uri);
+    private Router set(String method, String uri, Function function) {
+        mapping.put(new URI(method, moduleUri + uri), function);
+        LOG.info("load uri ==> [method: {}][uri: {}]", method, moduleUri + uri);
         return this;
     }
 
     // get方法
-    public <R> Router get(String uri,Function<Parameter,R> function) {
-        return set("GET",uri,function);
+    public <R> Router get(String uri, Function<Parameter, R> function) {
+        return set("GET", uri, function);
     }
 
     // post方法
-    public <R> Router post(String uri,Function<Parameter,R> function) {
-        return set("POST",uri,function);
+    public <R> Router post(String uri, Function<Parameter, R> function) {
+        return set("POST", uri, function);
     }
 
     // put方法
-    public <R> Router put(String uri,Function<Parameter,R> function) {
-        return set("PUT",uri,function);
+    public <R> Router put(String uri, Function<Parameter, R> function) {
+        return set("PUT", uri, function);
     }
 
     // delete方法
-    public <R> Router delete(String uri,Function<Parameter,R> function) {
-        return set("DELETE",uri,function);
+    public <R> Router delete(String uri, Function<Parameter, R> function) {
+        return set("DELETE", uri, function);
     }
 
     // head方法
-    public <R> Router head(String uri,Function<Parameter,R> function) {
-        return set("HEAD",uri,function);
+    public <R> Router head(String uri, Function<Parameter, R> function) {
+        return set("HEAD", uri, function);
     }
 
     // trace方法
-    public <R> Router trace(String uri,Function<Parameter,R> function) {
-        return set("TRACE",uri,function);
+    public <R> Router trace(String uri, Function<Parameter, R> function) {
+        return set("TRACE", uri, function);
     }
 
     public void end() {

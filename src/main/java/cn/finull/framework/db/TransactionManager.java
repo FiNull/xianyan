@@ -1,6 +1,7 @@
 package cn.finull.framework.db;
 
 import cn.finull.framework.core.bean.Bean;
+
 import java.sql.Connection;
 
 public interface TransactionManager extends Bean {
@@ -12,6 +13,7 @@ public interface TransactionManager extends Bean {
 
     /**
      * 获得数据库连接
+     *
      * @return 数据库连接
      */
     Connection getConnection();

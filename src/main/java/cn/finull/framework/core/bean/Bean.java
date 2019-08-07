@@ -15,5 +15,6 @@ public interface Bean {
     }
 
     // 初始化所有依赖
-    default void init() {}
+    default void init() {
+    }
 }

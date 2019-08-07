@@ -1,5 +1,4 @@
-
-layui.use(['layedit','_util','http','jquery','layer'], function(){
+layui.use(['layedit', '_util', 'http', 'jquery', 'layer'], function () {
     let layedit = layui.layedit;
     let _util = layui._util;
     let http = layui.http;
@@ -13,7 +12,7 @@ layui.use(['layedit','_util','http','jquery','layer'], function(){
         }
     });
     //建立编辑器
-    let index = layedit.build('article',{
+    let index = layedit.build('article', {
         height: 400
     });
 
@@ -23,26 +22,26 @@ layui.use(['layedit','_util','http','jquery','layer'], function(){
         return;
     }
 
-    $('.save').on('click',function () {
+    $('.save').on('click', function () {
         var title = $('#title').val();
         var content = layedit.getContent(index);
         var text = layedit.getText(index);
 
         if (!title) {
-            layer.msg('标题不能为空',{time:2000,icon:6});
+            layer.msg('标题不能为空', {time: 2000, icon: 6});
             return;
         }
         if (title.length > 20) {
-            layer.msg('标题不能超过20字',{time:2000,icon:6});
+            layer.msg('标题不能超过20字', {time: 2000, icon: 6});
             return;
         }
 
         if (!content) {
-            layer.msg('正文不能为空',{time:2000,icon:6});
+            layer.msg('正文不能为空', {time: 2000, icon: 6});
             return;
         }
         if (content.length > 10000) {
-            layer.msg('正文不能超过10000字符',{time:2000,icon:6});
+            layer.msg('正文不能超过10000字符', {time: 2000, icon: 6});
             return;
         }
 
@@ -61,12 +60,12 @@ layui.use(['layedit','_util','http','jquery','layer'], function(){
             success: function (data) {
                 window.location.href = "index.html";
             },
-            error: function (status,err) {
+            error: function (status, err) {
                 if (status === 403) {
                     _util.showLoginPage();
                     return;
                 }
-                layer.msg(err,{time:2000,icon:5});
+                layer.msg(err, {time: 2000, icon: 5});
             }
         })
     });

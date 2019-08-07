@@ -7,7 +7,7 @@ public class ImageVO {
     private String msg;
     // src // 图片路径
     // title // 图片名称
-    private Map<String,String> data;
+    private Map<String, String> data;
 
     public Integer getCode() {
         return code;

@@ -18,6 +18,7 @@ public abstract class RequestHandlerInitialize {
 
     /**
      * 添加uri处理器
+     *
      * @param router 路由器
      */
     public abstract void addHandlers(Router router);

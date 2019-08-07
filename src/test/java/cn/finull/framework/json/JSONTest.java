@@ -15,7 +15,7 @@ public class JSONTest {
     @Test
     void format() {
         String password = "123456";
-        String hashed = BCrypt.hashpw(password,BCrypt.gensalt());
-        System.out.println(BCrypt.checkpw(password,hashed));
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        System.out.println(BCrypt.checkpw(password, hashed));
     }
 }

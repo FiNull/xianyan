@@ -13,12 +13,14 @@ public interface IUserService extends Service {
 
     /**
      * 检查用户名或邮箱是否存在
+     *
      * @return true：已存在；false：不存在
      */
     boolean check(String username);
 
     /**
      * 用户注册
+     *
      * @return 用户信息
      */
     @Transactional
@@ -26,18 +28,21 @@ public interface IUserService extends Service {
 
     /**
      * 用户登录
+     *
      * @return 用户信息
      */
     UserVO login(String username, String password);
 
     /**
      * 修改用户信息
+     *
      * @return 用户信息
      */
-    UserVO updateUserInfo(UserBO userBO,Integer userId);
+    UserVO updateUserInfo(UserBO userBO, Integer userId);
 
     /**
      * 获取用户信息
+     *
      * @param userId 用户ID
      * @return 用户信息
      */

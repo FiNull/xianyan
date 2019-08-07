@@ -5,13 +5,14 @@ import cn.finull.framework.core.AdviceRepertory;
 import cn.finull.framework.json.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.function.BiFunction;
 
-@WebFilter(filterName = "ExceptionFilter",value = "/*")
+@WebFilter(filterName = "ExceptionFilter", value = "/*")
 public class BExceptionFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(BExceptionFilter.class);
@@ -24,11 +25,10 @@ public class BExceptionFilter implements Filter {
         } catch (Throwable e) {
             BiFunction handler = AdviceRepertory.getInstance().handler(e.getClass());
             if (handler == null) {
-                LOG.error("Handler Exception Failure: {}",e.getMessage());
+                LOG.error("Handler Exception Failure: {}", e.getMessage());
                 e.printStackTrace();
                 throw new RuntimeException(e);
-            }
-            else {
+            } else {
                 try {
                     Object respBody = handler.apply(
                             e.getClass()
@@ -42,9 +42,8 @@ public class BExceptionFilter implements Filter {
                     }
                     if (respBody instanceof String) {
                         request.getRequestDispatcher(AppConfig.getViewPrefix() + respBody + AppConfig.getViewSuffix())
-                                .forward(request,response);
-                    }
-                    else {
+                                .forward(request, response);
+                    } else {
                         response.getWriter().write(JSON.format(respBody).toString());
                         response.getWriter().flush();
                     }

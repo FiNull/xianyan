@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * 为请求设置编码
  */
-@WebFilter(filterName = "EncodingFilter",value = "/*")
+@WebFilter(filterName = "EncodingFilter", value = "/*")
 public class AEncodingFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp,
                          FilterChain chain) throws ServletException, IOException {

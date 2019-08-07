@@ -5,6 +5,7 @@ import cn.finull.framework.json.JSON;
 import cn.finull.framework.json.JSONArray;
 import cn.finull.framework.json.JSONObject;
 import cn.finull.framework.util.StringUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,12 +18,12 @@ public class AppConfig {
 
     static {
         try (
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            AppConfig.class.getClassLoader().getResourceAsStream("application.json"),
-                            "UTF-8"
-                    )
-            )
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(
+                                AppConfig.class.getClassLoader().getResourceAsStream("application.json"),
+                                "UTF-8"
+                        )
+                )
         ) {
             JSON_OBJ = JSON.parse(StringUtil.reader(reader)).getObject();
         } catch (JSONParserException | IOException e) {
@@ -33,7 +34,7 @@ public class AppConfig {
     private static List<String> getArray(String key) {
         List<String> list = new ArrayList<>();
         JSONArray array = JSON_OBJ.getArray(key);
-        for (int i = 0; i < array.size(); i ++) {
+        for (int i = 0; i < array.size(); i++) {
             list.add(array.getString(i));
         }
         return list;
@@ -101,9 +102,9 @@ public class AppConfig {
 
     // 获得dao层的包
     public static List<String> getDBDao() {
-        JSONArray array =  JSON_OBJ.getObject("db").getArray("dao");
+        JSONArray array = JSON_OBJ.getObject("db").getArray("dao");
         List<String> list = new ArrayList<>();
-        for (int i = 0 ; i < array.size(); i ++) {
+        for (int i = 0; i < array.size(); i++) {
             list.add(array.getString(i));
         }
         return list;

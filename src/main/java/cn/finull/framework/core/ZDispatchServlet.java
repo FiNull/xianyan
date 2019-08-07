@@ -7,6 +7,7 @@ import cn.finull.framework.core.request.URI;
 import cn.finull.framework.core.response.ResponseEntity;
 import cn.finull.framework.except.MethodNotAllowedException;
 import cn.finull.framework.json.JSON;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import java.util.function.Function;
  * @author FiNull
  * 中央处理器
  */
-@WebFilter(filterName = "DispatchFilter",value = "/*")
+@WebFilter(filterName = "DispatchFilter", value = "/*")
 public class ZDispatchServlet implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest,
@@ -29,8 +30,8 @@ public class ZDispatchServlet implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         // 封装参数
-        Parameter parameter = new Parameter(request,response);
-        URI uri = new URI(request.getMethod(),request.getRequestURI());
+        Parameter parameter = new Parameter(request, response);
+        URI uri = new URI(request.getMethod(), request.getRequestURI());
         // 获得处理器
         Function handler = Router.getInstance().handler(uri);
         if (handler == null) {
@@ -38,7 +39,7 @@ public class ZDispatchServlet implements Filter {
                 throw new MethodNotAllowedException("Method Not Allowed: [" + request.getMethod() + ":" + request.getRequestURI() + "]");
             }
             // 不通过框架处理该请求
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
         // 获得restful uri 参数和值
@@ -52,23 +53,19 @@ public class ZDispatchServlet implements Filter {
             response.setContentType(Media.APPLICATION_JSON_UTF_8);
             writer.write("null");
             writer.flush();
-        }
-        else if (respBody instanceof String) {
+        } else if (respBody instanceof String) {
             String url = (String) respBody;
             if (url.startsWith("redirect:")) {
                 // 请求重定向
                 response.sendRedirect(url.substring(url.indexOf(":") + 1));
-            }
-            else if (url.startsWith("forward:")) {
+            } else if (url.startsWith("forward:")) {
                 // 请求转发
-                request.getRequestDispatcher(url.substring(url.indexOf(":") + 1)).forward(request,response);
-            }
-            else {
+                request.getRequestDispatcher(url.substring(url.indexOf(":") + 1)).forward(request, response);
+            } else {
                 // 转发至模板
-                request.getRequestDispatcher(AppConfig.getViewPrefix() + url + AppConfig.getViewSuffix()).forward(request,response);
+                request.getRequestDispatcher(AppConfig.getViewPrefix() + url + AppConfig.getViewSuffix()).forward(request, response);
             }
-        }
-        else {
+        } else {
             // 以json形式返回
             response.setContentType(Media.APPLICATION_JSON_UTF_8);
 

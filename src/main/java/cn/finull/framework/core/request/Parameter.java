@@ -14,6 +14,7 @@ import org.apache.tomcat.util.http.fileupload.FileItemIterator;
 import org.apache.tomcat.util.http.fileupload.FileItemStream;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
 import javax.servlet.http.*;
 import java.io.*;
 import java.nio.MappedByteBuffer;
@@ -29,7 +30,7 @@ public class Parameter {
     private HttpServletResponse response;
     private HttpSession session;
 
-    public Parameter(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public Parameter(HttpServletRequest request, HttpServletResponse response) throws IOException {
         this.request = request;
         this.response = response;
         this.session = request.getSession();
@@ -42,7 +43,7 @@ public class Parameter {
         }
         pCookie = new PCookie();
         pSession = new Session();
-        model  = new Model();
+        model = new Model();
     }
 
     // 头部信息
@@ -84,7 +85,7 @@ public class Parameter {
     // 头部参数
     public class Header {
 
-        private Map<String,String[]> params;
+        private Map<String, String[]> params;
 
         // 通过参数名获取参数
         public String byName(String name) {
@@ -112,17 +113,17 @@ public class Parameter {
                         list.add(headers.nextElement());
                     }
                     String[] hs = new String[list.size()];
-                    params.put(headerName,list.toArray(hs));
+                    params.put(headerName, list.toArray(hs));
                 }
             }
             try {
-                return ClassUtil.copyProperty(params,clz);
+                return ClassUtil.copyProperty(params, clz);
             } catch (Exception e) {
                 throw new BadParameterException(e);
             }
         }
 
-        public void addHeader(String name,String value) {
+        public void addHeader(String name, String value) {
             response.addHeader(name, value);
         }
     }
@@ -130,10 +131,10 @@ public class Parameter {
     // 请求、响应体参数
     public class Body {
 
-        private Map<String,String> params = new HashMap<>();
+        private Map<String, String> params = new HashMap<>();
 
         // 文件
-        private Map<String,TransFile> fileParams = new HashMap<>();
+        private Map<String, TransFile> fileParams = new HashMap<>();
 
         private JSON json;
         private JSONObject object;
@@ -145,7 +146,7 @@ public class Parameter {
                     || Media.TEXT_PLAIN.equals(request.getContentType())
                     || Media.TEXT_PLAIN_UTF_8.equals(request.getContentType())) {
                 try (
-                        BufferedReader reader= request.getReader()
+                        BufferedReader reader = request.getReader()
                 ) {
                     json = JSON.parse(StringUtil.reader(reader));
                     if (json != null)
@@ -170,7 +171,7 @@ public class Parameter {
                                         )
                                 )
                         ) {
-                            params.put(fieldName,StringUtil.reader(reader));
+                            params.put(fieldName, StringUtil.reader(reader));
                         }
                     }
                     // 此字段是文件
@@ -190,14 +191,14 @@ public class Parameter {
             }
         }
 
-        public void addParams(Map<String,String> params) {
+        public void addParams(Map<String, String> params) {
             this.params.putAll(params);
         }
 
         public <T> T to(Class<T> clz) {
             if (json == null) {
                 try {
-                    return ClassUtil.copyProperty(request.getParameterMap(),clz);
+                    return ClassUtil.copyProperty(request.getParameterMap(), clz);
                 } catch (Exception e) {
                     throw new BadParameterException(e);
                 }
@@ -266,7 +267,7 @@ public class Parameter {
             response.addCookie(cookie);
         }
 
-        public void addCoolie(String name,String value,String domain,String path,int maxAge) {
+        public void addCoolie(String name, String value, String domain, String path, int maxAge) {
             Cookie cookie = new Cookie(name, value);
             cookie.setDomain(domain);
             cookie.setPath(path);
@@ -281,7 +282,7 @@ public class Parameter {
             return session.getAttribute(name);
         }
 
-        public void addSession(String name,Object value) {
+        public void addSession(String name, Object value) {
             session.setAttribute(name, value);
         }
 
@@ -300,7 +301,7 @@ public class Parameter {
             return request.getAttribute(name);
         }
 
-        public void add(String name,Object value) {
+        public void add(String name, Object value) {
             request.setAttribute(name, value);
         }
     }
@@ -314,7 +315,7 @@ public class Parameter {
         private String fileType;
         private String fileSuffix;
 
-        TransFile(File file,String fileName,String fileType) {
+        TransFile(File file, String fileName, String fileType) {
             this.file = file;
             this.fileName = fileName;
             this.fileType = fileType;
@@ -332,7 +333,7 @@ public class Parameter {
                 pathFile.mkdirs();
             }
 
-            File outFile = new File(pathFile,name);
+            File outFile = new File(pathFile, name);
             outFile.setWritable(true);
 
             try (

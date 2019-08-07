@@ -1,13 +1,13 @@
-layui.define(['jquery','layer','_util','http'],function(exports){
+layui.define(['jquery', 'layer', '_util', 'http'], function (exports) {
     let $ = layui.jquery
-        ,layer = layui.layer
-        ,_util = layui._util
-        ,http = layui.http;
+        , layer = layui.layer
+        , _util = layui._util
+        , http = layui.http;
 
 
     // start 导航显示隐藏
-    $("#mobile-nav").on('click', function(){
-      $("#pop-nav").toggle();
+    $("#mobile-nav").on('click', function () {
+        $("#pop-nav").toggle();
     });
     // end 导航显示隐藏
 
@@ -21,7 +21,8 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 endSize: "30px",    //动画结束的文字大小
                 interval: 600,  //动画时间间隔
                 color: "red",    //文字颜色
-                callback: function () { }    //回调函数
+                callback: function () {
+                }    //回调函数
             }, options);
 
             $("body").append("<span class='num'>" + options.str + "</span>");
@@ -48,20 +49,21 @@ layui.define(['jquery','layer','_util','http'],function(exports){
             });
         }
     });
-    function niceIn(prop){
-      prop.find('i').addClass('niceIn');
-      setTimeout(function(){
-        prop.find('i').removeClass('niceIn');
-      },1000);
+
+    function niceIn(prop) {
+        prop.find('i').addClass('niceIn');
+        setTimeout(function () {
+            prop.find('i').removeClass('niceIn');
+        }, 1000);
     }
 
     // start  图片遮罩
     var layerphotos = document.getElementsByClassName('layer-photos-demo');
-    for(var i = 1;i <= layerphotos.length;i++){
-      layer.photos({
-        photos: ".layer-photos-demo"+i+""
-        ,anim: 0
-      });
+    for (var i = 1; i <= layerphotos.length; i++) {
+        layer.photos({
+            photos: ".layer-photos-demo" + i + ""
+            , anim: 0
+        });
     }
     // end 图片遮罩
 
@@ -86,7 +88,7 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 niceIn($this);
                 layer.msg('点赞成功', {
                     icon: 6
-                    ,time: 1000
+                    , time: 1000
                 });
                 if ($starNum) {
                     $starNum.text(Number($starNum.text()) + 1);
@@ -108,7 +110,7 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 niceIn($this);
                 layer.msg('已取消', {
                     icon: 6
-                    ,time: 1000
+                    , time: 1000
                 });
                 if ($starNum) {
                     $starNum.text(Number($starNum.text()) - 1);
@@ -134,14 +136,14 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 success(data) {
                     __this.updateStar($this);
                 },
-                error(status,err) {
+                error(status, err) {
                     if (status === 406) {
                         _util.showLoginPage();
                         return;
                     }
                     layer.msg(err, {
                         icon: 5
-                        ,time: 1000
+                        , time: 1000
                     })
                 }
             });
@@ -166,14 +168,14 @@ layui.define(['jquery','layer','_util','http'],function(exports){
                 success(data) {
                     __this.updateStar($this)
                 },
-                error(status,err) {
+                error(status, err) {
                     if (status === 406) {
                         _util.showLoginPage();
                         return;
                     }
                     layer.msg(err, {
                         icon: 5
-                        ,time: 1000
+                        , time: 1000
                     })
                 }
             })

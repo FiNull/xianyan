@@ -17,7 +17,7 @@ public class JSONObject {
         Element element = object.get(key);
         if (element == null) return null;
         if (element.getType() == Type.STRING) {
-            return ((Value)element).getString();
+            return ((Value) element).getString();
         }
         return null;
     }
@@ -26,7 +26,7 @@ public class JSONObject {
         Element element = object.get(key);
         if (element == null) return null;
         if (element.getType() == Type.NUMBER) {
-            return ((Value)element).getNumber();
+            return ((Value) element).getNumber();
         }
         return null;
     }
@@ -34,20 +34,20 @@ public class JSONObject {
     public Integer getInt(String key) {
         Double num = getDouble(key);
         if (num == null) return null;
-        return (int)num.doubleValue();
+        return (int) num.doubleValue();
     }
 
     public Long getLong(String key) {
         Double num = getDouble(key);
         if (num == null) return null;
-        return (long)num.doubleValue();
+        return (long) num.doubleValue();
     }
 
     public Boolean getBool(String key) {
         Element element = object.get(key);
         if (element == null) return null;
         if (element.getType() == Type.BOOL) {
-            return ((Value)element).getBool();
+            return ((Value) element).getBool();
         }
         return null;
     }
@@ -56,7 +56,7 @@ public class JSONObject {
         Element element = object.get(key);
         if (element == null) return null;
         if (element.getType() == Type.OBJECT) {
-            return new JSONObject((JObject)element);
+            return new JSONObject((JObject) element);
         }
         return null;
     }
@@ -65,7 +65,7 @@ public class JSONObject {
         Element element = object.get(key);
         if (element == null) return null;
         if (element.getType() == Type.ARRAY) {
-            return new JSONArray((Array)element);
+            return new JSONArray((Array) element);
         }
         return null;
     }

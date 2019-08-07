@@ -13,6 +13,7 @@ import cn.finull.xianyan.pojo.UserArticleStar;
 import cn.finull.xianyan.service.IArticleService;
 import cn.finull.xianyan.vo.ArticleDetailVO;
 import cn.finull.xianyan.vo.ArticleVO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,11 @@ public class ArticleServiceImpl implements IArticleService {
         iUserArticleStarDao = get(IUserArticleStarDao.class);
     }
 
-    private List<ArticleVO> generatorArticleVOList(List<Article> articleList,String userId) {
+    private List<ArticleVO> generatorArticleVOList(List<Article> articleList, String userId) {
         List<ArticleVO> articleVOList = new ArrayList<>();
         for (Article article : articleList) {
             ArticleVO articleVO = new ArticleVO();
-            ObjectUtil.copyObject(article,articleVO);
+            ObjectUtil.copyObject(article, articleVO);
             articleVO.setId(HashIDUtil.encode(article.getId()));
             articleVO.setMainPic(AppConfig.getHttpPrefix() + article.getMainPic());
             articleVO.setAuthorId(HashIDUtil.encode(article.getAuthorId()));
@@ -41,7 +42,7 @@ public class ArticleServiceImpl implements IArticleService {
             articleVO.setAuthor(user.getUsername());
             articleVO.setStar(false);
             if (userId != null) {
-                int result = iUserArticleStarDao.selectCountByUserIdAndAId((int)HashIDUtil.decode(userId),article.getId()).get("id").intValue();
+                int result = iUserArticleStarDao.selectCountByUserIdAndAId((int) HashIDUtil.decode(userId), article.getId()).get("id").intValue();
                 if (result > 0) {
                     articleVO.setStar(true);
                 }
@@ -52,15 +53,15 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public List<ArticleVO> findAll(String keyword,int currNum, int len, String userId) {
+    public List<ArticleVO> findAll(String keyword, int currNum, int len, String userId) {
         String key = "%" + (keyword == null ? "" : keyword.trim()) + "%";
-        List<Article> articleList = iArticleDao.selectAll(key,key,currNum, len);
-        return generatorArticleVOList(articleList,userId);
+        List<Article> articleList = iArticleDao.selectAll(key, key, currNum, len);
+        return generatorArticleVOList(articleList, userId);
     }
 
-    public List<ArticleVO> findAllByUserId(String authorId,int currNum,int len,String userId) {
-        List<Article> articleList = iArticleDao.selectAll((int)HashIDUtil.decode(authorId),currNum,len);
-        return generatorArticleVOList(articleList,userId);
+    public List<ArticleVO> findAllByUserId(String authorId, int currNum, int len, String userId) {
+        List<Article> articleList = iArticleDao.selectAll((int) HashIDUtil.decode(authorId), currNum, len);
+        return generatorArticleVOList(articleList, userId);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ArticleServiceImpl implements IArticleService {
 
         ArticleDetailVO articleDetailVO = new ArticleDetailVO();
 
-        ObjectUtil.copyObject(article,articleDetailVO);
+        ObjectUtil.copyObject(article, articleDetailVO);
 
         articleDetailVO.setId(articleId);
         articleDetailVO.setAuthorId(HashIDUtil.encode(article.getAuthorId()));
@@ -86,7 +87,7 @@ public class ArticleServiceImpl implements IArticleService {
 
         articleDetailVO.setStar(false);
         if (userId != null) {
-            int result = iUserArticleStarDao.selectCountByUserIdAndAId((int)HashIDUtil.decode(userId),article.getId()).get("id").intValue();
+            int result = iUserArticleStarDao.selectCountByUserIdAndAId((int) HashIDUtil.decode(userId), article.getId()).get("id").intValue();
             if (result > 0) {
                 articleDetailVO.setStar(true);
             }
@@ -110,18 +111,16 @@ public class ArticleServiceImpl implements IArticleService {
 
         if (articleStar == null) {
             articleStar = new UserArticleStar();
-            articleStar.setArticleId((int)HashIDUtil.decode(articleId));
-            articleStar.setAuthorId((int)HashIDUtil.decode(userId));
+            articleStar.setArticleId((int) HashIDUtil.decode(articleId));
+            articleStar.setAuthorId((int) HashIDUtil.decode(userId));
             articleStar.setStarStatus(true);
             article.setStarNum(article.getStarNum() + 1);
             result = iUserArticleStarDao.insert(articleStar);
-        }
-        else {
+        } else {
             articleStar.setStarStatus(!articleStar.getStarStatus());
             if (articleStar.getStarStatus()) {
                 article.setStarNum(article.getStarNum() + 1);
-            }
-            else {
+            } else {
                 article.setStarNum(article.getStarNum() - 1);
             }
             result = iUserArticleStarDao.update(articleStar);
@@ -133,9 +132,9 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public boolean save(ArticleBO articleBO, String userId) {
         Article article = new Article();
-        ObjectUtil.copyObject(articleBO,article);
+        ObjectUtil.copyObject(articleBO, article);
 
-        article.setAuthorId((int)HashIDUtil.decode(userId));
+        article.setAuthorId((int) HashIDUtil.decode(userId));
 
         return iArticleDao.insert(article) > 0;
     }

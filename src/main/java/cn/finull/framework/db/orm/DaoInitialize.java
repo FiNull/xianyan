@@ -8,6 +8,7 @@ import cn.finull.framework.util.ClassUtil;
 import cn.finull.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.beans.IntrospectionException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -42,51 +43,47 @@ public abstract class DaoInitialize {
         classList.forEach(clz -> {
 
             BaseDao baseDao = (BaseDao) Proxy.newProxyInstance(clz.getClassLoader(),
-                    new Class[] {clz}, (p,m,a) -> {
+                    new Class[]{clz}, (p, m, a) -> {
 
-                Annotation[] annos = m.getDeclaredAnnotations();
-                if (contanier(annos,Insert.class)) {
-                    Insert insert = m.getAnnotation(Insert.class);
-                    return insert(insert.value(),a,insert.generatedKey());
-                }
-                else if (contanier(annos,Update.class)) {
-                    Update update = m.getAnnotation(Update.class);
-                    return update(update.value(),a);
-                }
-                else if (contanier(annos,Select.class)) {
-                    Select select = m.getAnnotation(Select.class);
-                    if (m.getReturnType().getSimpleName().equals("List")) {
-                        // 获得List上的泛型类型
-                        Class resultClz;
-                        Type type = ((ParameterizedType)m.getGenericReturnType()).getActualTypeArguments()[0];
-                        if (type.getTypeName().equals("T")) {
-                            resultClz = (Class) ((ParameterizedType)(clz.getGenericInterfaces()[0])).getActualTypeArguments()[0];
+                        Annotation[] annos = m.getDeclaredAnnotations();
+                        if (contanier(annos, Insert.class)) {
+                            Insert insert = m.getAnnotation(Insert.class);
+                            return insert(insert.value(), a, insert.generatedKey());
+                        } else if (contanier(annos, Update.class)) {
+                            Update update = m.getAnnotation(Update.class);
+                            return update(update.value(), a);
+                        } else if (contanier(annos, Select.class)) {
+                            Select select = m.getAnnotation(Select.class);
+                            if (m.getReturnType().getSimpleName().equals("List")) {
+                                // 获得List上的泛型类型
+                                Class resultClz;
+                                Type type = ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0];
+                                if (type.getTypeName().equals("T")) {
+                                    resultClz = (Class) ((ParameterizedType) (clz.getGenericInterfaces()[0])).getActualTypeArguments()[0];
+                                } else {
+                                    resultClz = (Class) type;
+                                }
+                                return selectAll(select.value(), a, resultClz);
+                            }
+                            Class resultClz = m.getReturnType();
+                            if (m.getGenericReturnType().getTypeName().equals("T")) {
+                                resultClz = (Class) ((ParameterizedType) (clz.getGenericInterfaces()[0])).getActualTypeArguments()[0];
+                            }
+                            return select(select.value(), a, resultClz);
+                        } else if (contanier(annos, Delete.class)) {
+                            Delete delete = m.getAnnotation(Delete.class);
+                            // 获取接口上的泛型类型
+                            Class delClz = (Class) ((ParameterizedType) clz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
+                            return delete(delete.value(), a, delClz);
                         }
-                        else {
-                            resultClz = (Class) type;
-                        }
-                        return selectAll(select.value(),a,resultClz);
-                    }
-                    Class resultClz = m.getReturnType();
-                    if (m.getGenericReturnType().getTypeName().equals("T")) {
-                        resultClz = (Class) ((ParameterizedType)(clz.getGenericInterfaces()[0])).getActualTypeArguments()[0];
-                    }
-                    return select(select.value(),a,resultClz);
-                }
-                else if (contanier(annos,Delete.class)) {
-                    Delete delete = m.getAnnotation(Delete.class);
-                    // 获取接口上的泛型类型
-                    Class delClz = (Class) ((ParameterizedType)clz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
-                    return delete(delete.value(),a,delClz);
-                }
-                return null;
-            });
+                        return null;
+                    });
 
-            repertory.put(clz,baseDao);
+            repertory.put(clz, baseDao);
         });
     }
 
-    private boolean contanier(Annotation[] annos,Class clz) {
+    private boolean contanier(Annotation[] annos, Class clz) {
         return Arrays.stream(annos).anyMatch(a -> a.annotationType() == clz);
     }
 
@@ -105,21 +102,21 @@ public abstract class DaoInitialize {
             if (ch == '}') {
                 flag = false;
                 paramNames.add(sb.toString());
-                sb.delete(0,sb.length());
+                sb.delete(0, sb.length());
             }
         }
 
         return paramNames;
     }
 
-    private int executeSql(String sql,List<Object> param) throws SQLException {
-        LOG.debug("execute sql: {}",sql);
+    private int executeSql(String sql, List<Object> param) throws SQLException {
+        LOG.debug("execute sql: {}", sql);
 
         // 执行 sql
         Connection conn = transactionManager.getConnection();
         PreparedStatement statement = conn.prepareStatement(sql);
-        for (int i = 0; i < param.size(); i ++) {
-            statement.setObject(i+1,param.get(i));
+        for (int i = 0; i < param.size(); i++) {
+            statement.setObject(i + 1, param.get(i));
         }
 
         return statement.executeUpdate();
@@ -127,11 +124,12 @@ public abstract class DaoInitialize {
 
     /**
      * 插入操作
-     * @param sql sql语句
+     *
+     * @param sql    sql语句
      * @param params 参数
      * @return 影响行数
      */
-    private int insert(String sql,Object[] params,boolean insertKey) throws SQLException, NoSuchFieldException, IllegalAccessException {
+    private int insert(String sql, Object[] params, boolean insertKey) throws SQLException, NoSuchFieldException, IllegalAccessException {
 
         String exeSql = sql;
         List<Object> paramList = new ArrayList<>();
@@ -143,7 +141,7 @@ public abstract class DaoInitialize {
             // 数据库实体类
             Object param = params[0];
             // 实体类的所有字段名和值
-            Map<String,Object> paramMap = ClassUtil.getClassFieldNamesAndValues(param);
+            Map<String, Object> paramMap = ClassUtil.getClassFieldNamesAndValues(param);
 
             // 实体类的表注解
             Table table = param.getClass().getAnnotation(Table.class);
@@ -159,7 +157,7 @@ public abstract class DaoInitialize {
 
             StringBuilder nameList = new StringBuilder("(");
             StringBuilder valueList = new StringBuilder("VALUE(");
-            for (Map.Entry<String,Object> entry : paramMap.entrySet()) {
+            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
                 if (entry.getValue() != null) {
                     nameList.append("`" + StringUtil.humpToUnderline(entry.getKey()) + "`,");
                     valueList.append("?,");
@@ -175,24 +173,22 @@ public abstract class DaoInitialize {
             resultSql.append(" " + valueList.toString() + ";");
 
             exeSql = resultSql.toString();
-        }
-        else {
+        } else {
             if (sql.contains("?")) {
                 if (params == null || params.length == 0) {
                     throw new DBParamterException("数据库插入操作参数错误！");
                 }
                 paramList.addAll(Arrays.stream(params).collect(Collectors.toList()));
-            }
-            else {
+            } else {
                 if (params == null || params.length != 1) {
                     throw new DBParamterException("数据库插入操作参数错误！");
                 }
 
-                Map<String,Object> paramMap = ClassUtil.getClassFieldNamesAndValues(params[0]);
+                Map<String, Object> paramMap = ClassUtil.getClassFieldNamesAndValues(params[0]);
                 List<String> paramNames = getParamNamesBySql(sql);
                 for (String name : paramNames) {
                     paramList.add(paramMap.get(name));
-                    exeSql = exeSql.replaceFirst("\\{" + name + "}","?");
+                    exeSql = exeSql.replaceFirst("\\{" + name + "}", "?");
 //                    exeSql = exeSql.replace("{" + name + "}","?");
                 }
             }
@@ -204,9 +200,8 @@ public abstract class DaoInitialize {
         Connection conn = transactionManager.getConnection();
         PreparedStatement statement;
         if (insertKey) {
-            statement = conn.prepareStatement(exeSql,Statement.RETURN_GENERATED_KEYS);
-        }
-        else {
+            statement = conn.prepareStatement(exeSql, Statement.RETURN_GENERATED_KEYS);
+        } else {
             statement = conn.prepareStatement(exeSql);
         }
         for (int i = 0; i < paramList.size(); i++) {
@@ -223,7 +218,7 @@ public abstract class DaoInitialize {
                 if (keyValue instanceof BigInteger) {
                     keyValue = ((BigInteger) keyValue).longValue();
                 }
-                ClassUtil.setValue(params[0],StringUtil.underlineToHump(idName),keyValue);
+                ClassUtil.setValue(params[0], StringUtil.underlineToHump(idName), keyValue);
             }
         }
 
@@ -232,11 +227,12 @@ public abstract class DaoInitialize {
 
     /**
      * 修改操作
-     * @param sql sql语句
+     *
+     * @param sql    sql语句
      * @param params 参数
      * @return 影响行数
      */
-    private int update(String sql,Object[] params) throws SQLException {
+    private int update(String sql, Object[] params) throws SQLException {
 
         String updateSql = sql;
         List<Object> paramValues = new ArrayList<>();
@@ -248,7 +244,7 @@ public abstract class DaoInitialize {
 
             Object param = params[0];
             // 需要将ID特殊标识出来
-            Map<String,Object> fields = ClassUtil.getClassFieldNamesAndValues(param);
+            Map<String, Object> fields = ClassUtil.getClassFieldNamesAndValues(param);
             // 表名
             String tableName = StringUtil.humpToUnderline(param.getClass().getSimpleName());
             Table table = param.getClass().getAnnotation(Table.class);
@@ -261,7 +257,7 @@ public abstract class DaoInitialize {
             Object idValue = null;
             StringBuilder resultSql = new StringBuilder("UPDATE");
             resultSql.append(" `" + tableName + "` SET ");
-            for (Map.Entry<String,Object> entry : fields.entrySet()) {
+            for (Map.Entry<String, Object> entry : fields.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
                 if (value == null) {
@@ -278,34 +274,33 @@ public abstract class DaoInitialize {
             resultSql.append(" WHERE `" + idName + "` = ?;");
             paramValues.add(idValue);
             updateSql = resultSql.toString();
-        }
-        else {
+        } else {
             if (sql.contains("?")) {
                 paramValues.addAll(Arrays.stream(params).collect(Collectors.toList()));
-            }
-            else {
+            } else {
                 if (params == null || params.length != 1) {
                     throw new DBParamterException("数据库插入操作参数错误！");
                 }
 
                 List<String> paramNames = getParamNamesBySql(sql);
-                Map<String,Object> data = ClassUtil.getClassFieldNamesAndValues(params[0]);
+                Map<String, Object> data = ClassUtil.getClassFieldNamesAndValues(params[0]);
                 for (String name : paramNames) {
-                    updateSql = updateSql.replaceFirst("\\{"+name+"}","?");
+                    updateSql = updateSql.replaceFirst("\\{" + name + "}", "?");
 //                    updateSql = updateSql.replace("{"+name+"}","?");
                     paramValues.add(data.get(name));
                 }
             }
         }
 
-        return executeSql(updateSql,paramValues);
+        return executeSql(updateSql, paramValues);
     }
 
     /**
      * 查询操作
-     * @param sql sql语句
+     *
+     * @param sql    sql语句
      * @param params 参数
-     * @param clz 返回类型
+     * @param clz    返回类型
      * @return 返回查询数据
      */
     private Object select(String sql, Object[] params, Class clz) throws SQLException, IllegalAccessException, InstantiationException, IntrospectionException, InvocationTargetException {
@@ -332,48 +327,46 @@ public abstract class DaoInitialize {
             resultSql.append(" FROM `" + tableName + "` WHERE `" + getIdName(clz) + "` = ?;");
             selectSql = resultSql.toString();
             paramValues.add(params[0]);
-        }
-        else {
+        } else {
             if (sql.contains("?")) {
                 paramValues.addAll(Arrays.stream(params).collect(Collectors.toList()));
-            }
-            else {
+            } else {
                 if (params == null || params.length != 1) {
                     throw new DBParamterException("数据库查询操作参数错误！");
                 }
 
                 List<String> names = getParamNamesBySql(sql);
-                Map<String,Object> nameValues = ClassUtil.getClassFieldNamesAndValues(params[0]);
+                Map<String, Object> nameValues = ClassUtil.getClassFieldNamesAndValues(params[0]);
                 for (String name : names) {
-                    selectSql = selectSql.replaceFirst("\\{" + name + "}","?");
+                    selectSql = selectSql.replaceFirst("\\{" + name + "}", "?");
 //                    selectSql = selectSql.replace("{" + name + "}","?");
                     paramValues.add(nameValues.get(name));
                 }
             }
         }
 
-        LOG.debug("execute sql: {}",selectSql);
+        LOG.debug("execute sql: {}", selectSql);
 
         Connection conn = transactionManager.getConnection();
         PreparedStatement statement = conn.prepareStatement(selectSql);
-        for (int i = 0; i < paramValues.size(); i ++) {
-            statement.setObject(i + 1,paramValues.get(i));
+        for (int i = 0; i < paramValues.size(); i++) {
+            statement.setObject(i + 1, paramValues.get(i));
         }
         // 数据库结果集
         ResultSet resultSet = statement.executeQuery();
         // 获得结果集的元数据
         ResultSetMetaData metaData = resultSet.getMetaData();
         if (resultSet.next()) {
-            Map<String,Object> data = new HashMap<>();
-            for (int i = 0; i < metaData.getColumnCount(); i ++) {
+            Map<String, Object> data = new HashMap<>();
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
                 String fieldName = metaData.getColumnName(i + 1);
                 Object value = resultSet.getObject(i + 1);
-                data.put(StringUtil.underlineToHump(fieldName),value);
+                data.put(StringUtil.underlineToHump(fieldName), value);
             }
             if (clz.getSimpleName().equals("Map")) {
                 return data;
             }
-            return ClassUtil.copyObject(data,clz);
+            return ClassUtil.copyObject(data, clz);
         }
 
         return null;
@@ -381,12 +374,13 @@ public abstract class DaoInitialize {
 
     /**
      * 查询列表
+     *
      * @param sql sql语句
      * @param clz 返回类型
      * @return 返回查询数据
      */
     @SuppressWarnings("all")
-    private List<Object> selectAll(String sql,Object[] params,Class clz) throws SQLException, InvocationTargetException, IntrospectionException, InstantiationException, IllegalAccessException {
+    private List<Object> selectAll(String sql, Object[] params, Class clz) throws SQLException, InvocationTargetException, IntrospectionException, InstantiationException, IllegalAccessException {
 
         List<Object> paramValues = new ArrayList<>();
         String selectSql = sql;
@@ -406,20 +400,18 @@ public abstract class DaoInitialize {
             resultSql.deleteCharAt(resultSql.length() - 1);
             resultSql.append(" FROM `" + tableName + "`;");
             selectSql = resultSql.toString();
-        }
-        else {
+        } else {
             if (sql.contains("?")) {
                 paramValues.addAll(Arrays.stream(params).collect(Collectors.toList()));
-            }
-            else {
+            } else {
                 if (params == null || params.length != 1) {
                     throw new DBParamterException("查询操作参数错误！");
                 }
 
-                Map<String,Object> fieldValues = ClassUtil.getClassFieldNamesAndValues(params[0]);
+                Map<String, Object> fieldValues = ClassUtil.getClassFieldNamesAndValues(params[0]);
                 List<String> fieldNames = getParamNamesBySql(sql);
                 for (String fieldName : fieldNames) {
-                    selectSql = selectSql.replaceFirst("\\{" + fieldName + "}","?");
+                    selectSql = selectSql.replaceFirst("\\{" + fieldName + "}", "?");
 //                    selectSql = selectSql.replace("{" + fieldName + "}","?");
                     paramValues.add(fieldValues.get(fieldName));
                 }
@@ -428,26 +420,26 @@ public abstract class DaoInitialize {
 
         Connection conn = transactionManager.getConnection();
 
-        LOG.debug("execute sql: {}",selectSql);
+        LOG.debug("execute sql: {}", selectSql);
 
         Page page = null;
 
         if (PageHelper.isPage()) {
-            String countSql = selectSql.replace(selectSql.substring(7,selectSql.indexOf("FROM") - 1),"COUNT(*)");
+            String countSql = selectSql.replace(selectSql.substring(7, selectSql.indexOf("FROM") - 1), "COUNT(*)");
             PreparedStatement statement = conn.prepareStatement(countSql);
             ResultSet result = statement.executeQuery();
             int cols = 0;
             if (result.next()) {
                 cols = result.getInt(1);
             }
-            page = new Page(PageHelper.getPageNum(),PageHelper.getPageSize(),cols);
+            page = new Page(PageHelper.getPageNum(), PageHelper.getPageSize(), cols);
             selectSql = selectSql + " LIMIT " + page.getStartIndex() + ":" + page.getPageSize();
         }
 
         PreparedStatement statement = conn.prepareStatement(selectSql);
 
-        for (int i = 0; i < paramValues.size(); i ++) {
-            statement.setObject(i + 1,paramValues.get(i));
+        for (int i = 0; i < paramValues.size(); i++) {
+            statement.setObject(i + 1, paramValues.get(i));
         }
 
         ResultSet resultSet = statement.executeQuery();
@@ -456,16 +448,15 @@ public abstract class DaoInitialize {
         List list = new ArrayList();
 
         while (resultSet.next()) {
-            Map<String,Object> data = new HashMap<>();
-            for (int i = 0; i < metaData.getColumnCount(); i ++) {
+            Map<String, Object> data = new HashMap<>();
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
                 String name = metaData.getColumnName(i + 1);
                 Object value = resultSet.getObject(i + 1);
-                data.put(StringUtil.underlineToHump(name),value);
+                data.put(StringUtil.underlineToHump(name), value);
             }
             if (!clz.getSimpleName().equals("Map")) {
-                list.add(ClassUtil.copyObject(data,clz));
-            }
-            else {
+                list.add(ClassUtil.copyObject(data, clz));
+            } else {
                 list.add(data);
             }
         }
@@ -480,11 +471,12 @@ public abstract class DaoInitialize {
 
     /**
      * 删除操作
-     * @param sql sql语句
+     *
+     * @param sql    sql语句
      * @param params 参数
      * @return 影响行数
      */
-    private int delete(String sql,Object[] params,Class delClz) throws SQLException {
+    private int delete(String sql, Object[] params, Class delClz) throws SQLException {
 
         String delSql = sql;
         List<Object> paramValues = new ArrayList<>();
@@ -504,26 +496,24 @@ public abstract class DaoInitialize {
             resultSql.append(" `" + getIdName(delClz) + "` = ?;");
             delSql = resultSql.toString();
             paramValues.add(params[0]);
-        }
-        else {
+        } else {
             if (sql.contains("?")) {
                 paramValues.addAll(Arrays.stream(params).collect(Collectors.toList()));
-            }
-            else {
+            } else {
                 if (params == null || params.length != 1) {
                     throw new DBParamterException("数据库删除操作参数错误！");
                 }
                 List<String> parmaNames = getParamNamesBySql(sql);
-                Map<String,Object> data = ClassUtil.getClassFieldNamesAndValues(params[0]);
+                Map<String, Object> data = ClassUtil.getClassFieldNamesAndValues(params[0]);
                 for (String name : parmaNames) {
-                    delSql = delSql.replaceFirst("\\{"+name+"}","?");
+                    delSql = delSql.replaceFirst("\\{" + name + "}", "?");
 //                    delSql = delSql.replace("{"+name+"}","?");
                     paramValues.add(data.get(name));
                 }
             }
         }
 
-        return executeSql(delSql,paramValues);
+        return executeSql(delSql, paramValues);
     }
 
     private String getIdName(Class clz) {

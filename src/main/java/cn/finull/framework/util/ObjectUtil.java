@@ -6,8 +6,8 @@ import java.util.Map;
 
 public final class ObjectUtil {
 
-    public static void copyObject(Object source,Object target) {
-        Map<String,Object> sourceMap = ClassUtil.getClassFieldNamesAndValues(source);
+    public static void copyObject(Object source, Object target) {
+        Map<String, Object> sourceMap = ClassUtil.getClassFieldNamesAndValues(source);
         Field[] fields = target.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
@@ -24,7 +24,7 @@ public final class ObjectUtil {
                 if (!value.getClass().getSimpleName().equals(field.getType().getSimpleName())) {
                     continue;
                 }
-                field.set(target,value);
+                field.set(target, value);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

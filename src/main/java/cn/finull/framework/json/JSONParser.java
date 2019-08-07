@@ -8,6 +8,7 @@ import cn.finull.framework.json.element.JObject;
 import cn.finull.framework.json.element.Value;
 import cn.finull.framework.util.StringUtil;
 import cn.finull.framework.util.UnicodeUtil;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -24,6 +25,7 @@ class JSONParser {
 
     /**
      * 将字符串解析成为一个json元素
+     *
      * @param json 字符串
      * @return json元素
      */
@@ -50,7 +52,7 @@ class JSONParser {
                 if ((ch >= '0' && ch <= '9') || ch == '-') {
                     return parseNumber(ch);
                 }
-                throw generatorException(content.json.substring(0,content.curIndex),"wrong syntax");
+                throw generatorException(content.json.substring(0, content.curIndex), "wrong syntax");
         }
     }
 
@@ -81,60 +83,60 @@ class JSONParser {
                 break;
             }
             switch (ch) {
-                case '{' :
+                case '{':
                     stack.offerFirst(parseObject());
                     break;
-                case '[' :
+                case '[':
                     stack.offerFirst(parseArray());
                     break;
                 case '\"':
                     stack.offerFirst(parseString());
                     break;
-                case ':' :
+                case ':':
                     // key不是string或没有Key
                     if (stack.size() != 1 || stack.getFirst().getType() != Type.STRING) {
-                        throw generatorException(content.json.substring(0,content.curIndex + 1),"wrong syntax before \'^\'");
+                        throw generatorException(content.json.substring(0, content.curIndex + 1), "wrong syntax before \'^\'");
                     }
                     break;
-                case 'n' :
+                case 'n':
                     stack.offerFirst(parseNull());
                     break;
-                case 't' :
+                case 't':
                     stack.offerFirst(parseTrue());
                     break;
-                case 'f' :
+                case 'f':
                     stack.offerFirst(parseFalse());
                     break;
-                case ',' :
+                case ',':
                     if (content.hasChar()) {
                         char c = '0';
-                        for (int i = 1; i < content.json.length(); i ++) {
-                             c = content.json.charAt(content.curIndex + i);
-                             if (!Character.isWhitespace(c)) {
-                                 break;
-                             }
+                        for (int i = 1; i < content.json.length(); i++) {
+                            c = content.json.charAt(content.curIndex + i);
+                            if (!Character.isWhitespace(c)) {
+                                break;
+                            }
                         }
                         if (c == '\"' && stack.size() == 2) {
                             Element value = stack.pollFirst();
                             Element key = stack.pollFirst();
                             if (key.getType() == Type.STRING) {
-                                object.put(((Value)key).getString(),value);
+                                object.put(((Value) key).getString(), value);
                                 break;
                             }
                         }
                     }
-                    throw generatorException(content.json.substring(0,content.curIndex),"wrong syntax");
+                    throw generatorException(content.json.substring(0, content.curIndex), "wrong syntax");
                 default:
                     if ((ch >= '0' && ch <= '9') || ch == '-') {
                         // push
                         stack.offerFirst(parseNumber(ch));
                         break;
                     }
-                    throw generatorException(content.json.substring(0,content.curIndex + 1),"wrong syntax");
+                    throw generatorException(content.json.substring(0, content.curIndex + 1), "wrong syntax");
             }
         }
         if (!end) {
-            throw generatorException(content.json,"wrong syntax before \'^\'");
+            throw generatorException(content.json, "wrong syntax before \'^\'");
         }
         return object;
     }
@@ -157,22 +159,22 @@ class JSONParser {
                 case '\"':
                     deque.offerLast(parseString());
                     break;
-                case '[' :
+                case '[':
                     deque.offerLast(parseArray());
                     break;
-                case 'n' :
+                case 'n':
                     deque.offerLast(parseNull());
                     break;
-                case 't' :
+                case 't':
                     deque.offerLast(parseTrue());
                     break;
-                case 'f' :
+                case 'f':
                     deque.offerLast(parseFalse());
                     break;
-                case '{' :
+                case '{':
                     deque.offerLast(parseObject());
                     break;
-                case ',' :
+                case ',':
                     if (content.hasChar()) {
                         char c = content.json.charAt(content.curIndex + 1);
                         if (c == '\"' || c == '[' || c == '{'
@@ -181,17 +183,17 @@ class JSONParser {
                             break;
                         }
                     }
-                    throw generatorException(content.json.substring(0,content.curIndex),"wrong syntax");
+                    throw generatorException(content.json.substring(0, content.curIndex), "wrong syntax");
                 default:
                     if ((ch >= '0' && ch <= '9') || ch == '-') {
                         deque.offerLast(parseNumber(ch));
                         break;
                     }
-                    throw generatorException(content.json.substring(0,content.curIndex + 1),"wrong syntax " + ch);
+                    throw generatorException(content.json.substring(0, content.curIndex + 1), "wrong syntax " + ch);
             }
         }
         if (!end) {
-            throw generatorException(content.json,"missing \']\' before \'^\'");
+            throw generatorException(content.json, "missing \']\' before \'^\'");
         }
         Array array = new Array();
         while (!deque.isEmpty()) {
@@ -215,7 +217,7 @@ class JSONParser {
         try {
             return number(sb.toString());
         } catch (Exception e) {
-            throw generatorException(sb.toString(),"wrong number format before \'^\'");
+            throw generatorException(sb.toString(), "wrong number format before \'^\'");
         }
     }
 
@@ -229,42 +231,42 @@ class JSONParser {
 
     // 解析false
     private Element parseFalse() throws JSONParserException {
-        String bool = getAfterChar('f',4);
+        String bool = getAfterChar('f', 4);
         if ("false".equals(bool)) {
             Value value = new Value();
             value.setType(Type.BOOL);
             value.setBool(false);
             return value;
         }
-        throw generatorException(bool,"wrong syntax before \'^\'");
+        throw generatorException(bool, "wrong syntax before \'^\'");
     }
 
     // 解析true
     private Element parseTrue() throws JSONParserException {
-        String bool = getAfterChar('t',3);
+        String bool = getAfterChar('t', 3);
         if ("true".equals(bool)) {
             Value value = new Value();
             value.setType(Type.BOOL);
             value.setBool(true);
             return value;
         }
-        throw generatorException(bool,"wrong syntax before \'^\'");
+        throw generatorException(bool, "wrong syntax before \'^\'");
     }
 
     // 解析null
     private Element parseNull() throws JSONParserException {
-        String str = getAfterChar('n',3);
+        String str = getAfterChar('n', 3);
         if ("null".equals(str)) {
             Element ele = new Element();
             ele.setType(Type.NULL);
             return ele;
         }
-        throw generatorException(str,"wrong syntax before \'^\'");
+        throw generatorException(str, "wrong syntax before \'^\'");
     }
 
-    private String getAfterChar(char first,int len) {
+    private String getAfterChar(char first, int len) {
         StringBuilder sb = new StringBuilder("" + first);
-        for (int i = 0; i<len && content.hasChar(); i ++) {
+        for (int i = 0; i < len && content.hasChar(); i++) {
             sb.append(content.nextChar());
         }
         return sb.toString();
@@ -283,34 +285,50 @@ class JSONParser {
             }
             // 非法字符
             if (IllegalChar.contain(ch)) {
-                throw generatorException(sb.toString(),"Illegal Character " + IllegalChar.getValue(ch) + " before \'^\'");
+                throw generatorException(sb.toString(), "Illegal Character " + IllegalChar.getValue(ch) + " before \'^\'");
             }
             // 转义字符
             if (ch == '\\') {
                 if (!content.hasChar()) {
-                    throw generatorException(sb.toString(),"missing \'\"\' before \'^\'");
+                    throw generatorException(sb.toString(), "missing \'\"\' before \'^\'");
                 }
                 switch (content.nextChar()) {
-                    case '\"': sb.append('\"'); break;
-                    case '\\': sb.append('\\'); break;
-                    case '/' : sb.append('/');  break;
-                    case 'b' : sb.append('\b'); break;
-                    case 'f' : sb.append('\f'); break;
-                    case 'n' : sb.append('\n'); break;
-                    case 'r' : sb.append('\r'); break;
-                    case 't' : sb.append('\t'); break;
-                    case 'u' :
+                    case '\"':
+                        sb.append('\"');
+                        break;
+                    case '\\':
+                        sb.append('\\');
+                        break;
+                    case '/':
+                        sb.append('/');
+                        break;
+                    case 'b':
+                        sb.append('\b');
+                        break;
+                    case 'f':
+                        sb.append('\f');
+                        break;
+                    case 'n':
+                        sb.append('\n');
+                        break;
+                    case 'r':
+                        sb.append('\r');
+                        break;
+                    case 't':
+                        sb.append('\t');
+                        break;
+                    case 'u':
                         StringBuilder s = new StringBuilder("\\u");
-                        for (int i = 0; i<4; i ++) {
+                        for (int i = 0; i < 4; i++) {
                             if (!content.hasChar()) {
-                                throw generatorException(sb.append(s).toString(),s + "is wrong character");
+                                throw generatorException(sb.append(s).toString(), s + "is wrong character");
                             }
                             s.append(content.nextChar());
                         }
                         sb.append(UnicodeUtil.decode(s.toString()));
                         break;
                     default:
-                        throw generatorException(sb.toString(),"wrong syntax before \'^\', please check you json");
+                        throw generatorException(sb.toString(), "wrong syntax before \'^\', please check you json");
                 }
                 continue;
             }
@@ -318,7 +336,7 @@ class JSONParser {
             sb.append(ch);
         }
         if (!end) {
-            throw generatorException(sb.toString(),"missing \'\"\' before \'^\'");
+            throw generatorException(sb.toString(), "missing \'\"\' before \'^\'");
         }
         Value value = new Value();
         value.setType(Type.STRING);
@@ -326,13 +344,14 @@ class JSONParser {
         return value;
     }
 
-    private JSONParserException generatorException(String value,String msg) {
+    private JSONParserException generatorException(String value, String msg) {
         return new JSONParserException("[line:" + content.lineNum
                 + " col:" + content.colNum + "] " + value + "^: " + msg);
     }
 
     /**
      * 将java对象解析成为一个json元素
+     *
      * @param obj java对象
      * @return json元素
      */
@@ -348,24 +367,19 @@ class JSONParser {
 
         if (obj instanceof Collection) { // 集合
             ele = formatCollection((Collection) obj);
-        }
-        else if (obj instanceof Map) { // Map集合
+        } else if (obj instanceof Map) { // Map集合
             ele = formatMap((Map) obj);
-        }
-        else if (obj instanceof String) { // String类型
+        } else if (obj instanceof String) { // String类型
             ele = formatString((String) obj);
-        }
-        else if (obj instanceof Boolean) { // Bool类型
+        } else if (obj instanceof Boolean) { // Bool类型
             ele = formatBool((Boolean) obj);
-        }
-        else if (obj instanceof Integer
+        } else if (obj instanceof Integer
                 || obj instanceof Byte
                 || obj instanceof Short
                 || obj instanceof Double
                 || obj instanceof Long) { // 数字类型
             ele = formatNumber(obj);
-        }
-        else { // 自建类型
+        } else { // 自建类型
             try {
                 ele = formatObject(obj);
             } catch (IntrospectionException |
@@ -388,11 +402,11 @@ class JSONParser {
     // 格式化Map
     private Element formatMap(Map map) {
         JObject object = new JObject();
-        map.forEach((key,val) -> {
+        map.forEach((key, val) -> {
             if (key == null || !(key instanceof String)) {
                 throw new JSONEncodeException("Object convert to JSON failure");
             }
-            object.put((String) key,format(val));
+            object.put((String) key, format(val));
         });
         return object;
     }
@@ -431,13 +445,14 @@ class JSONParser {
                 continue;
             }
             Object val = pd.getReadMethod().invoke(obj);
-            ele.put(key,format(val));
+            ele.put(key, format(val));
         }
         return ele;
     }
 
     /**
      * 将Json元素转换为字符串
+     *
      * @param element json元素
      * @return 字符串
      */
@@ -495,7 +510,7 @@ class JSONParser {
             case OBJECT:
                 JObject object = (JObject) child;
                 jsonQueue.offerLast("{");
-                object.forEach((key,value) -> {
+                object.forEach((key, value) -> {
                     jsonQueue.offerLast("\"");
                     jsonQueue.offerLast(encodeString(key));
                     jsonQueue.offerLast("\":");
@@ -519,7 +534,7 @@ class JSONParser {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < value.length(); i ++) {
+        for (int i = 0; i < value.length(); i++) {
             char ch = value.charAt(i);
             switch (ch) {
                 case '\"':
@@ -532,7 +547,7 @@ class JSONParser {
                                 || c == 'f' || c == 'n' || c == 'r'
                                 || c == 't' || c == 'u') {
                             sb.append(ch).append(c);
-                            i ++;
+                            i++;
                             break;
                         }
                     }
@@ -566,11 +581,11 @@ class JSONParser {
         // 获得下一个字符串
         char nextChar() {
             lastColNum = colNum;
-            colNum ++;
+            colNum++;
             char ch = json.charAt(++curIndex);
             if (ch == '\n') {
                 lastLineNum = lineNum;
-                lineNum ++;
+                lineNum++;
                 colNum = 0;
             }
             return ch;
@@ -580,7 +595,7 @@ class JSONParser {
             if (curIndex < 0) {
                 return false;
             }
-            curIndex --;
+            curIndex--;
             lineNum = lastLineNum;
             colNum = lastColNum;
             return true;
@@ -591,18 +606,21 @@ class JSONParser {
      * 非法字符集
      */
     private static class IllegalChar {
-        private static Map<Character,String> CHAR_MAP = new HashMap<>();
+        private static Map<Character, String> CHAR_MAP = new HashMap<>();
+
         static {
 //            CHAR_MAP.put('/',"\\/");
-            CHAR_MAP.put('\b',"\\b");
-            CHAR_MAP.put('\f',"\\f");
-            CHAR_MAP.put('\t',"\\t");
-            CHAR_MAP.put('\n',"\\n");
-            CHAR_MAP.put('\r',"\\r");
+            CHAR_MAP.put('\b', "\\b");
+            CHAR_MAP.put('\f', "\\f");
+            CHAR_MAP.put('\t', "\\t");
+            CHAR_MAP.put('\n', "\\n");
+            CHAR_MAP.put('\r', "\\r");
         }
+
         static boolean contain(char ch) {
             return CHAR_MAP.containsKey(ch);
         }
+
         static String getValue(char ch) {
             return CHAR_MAP.get(ch);
         }

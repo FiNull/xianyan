@@ -1,4 +1,4 @@
-layui.use(['jquery','_util','flow','http'],function (exports) {
+layui.use(['jquery', '_util', 'flow', 'http'], function (exports) {
     const $ = layui.jquery,
         _util = layui._util,
         flow = layui.flow,
@@ -11,7 +11,7 @@ layui.use(['jquery','_util','flow','http'],function (exports) {
 
     let userData = user.user;
 
-    $('.photo').attr('src',userData.photo);
+    $('.photo').attr('src', userData.photo);
     $('.username').text(userData.username);
     $('.info').html(userData.sex ? '<i class="layui-icon">&#xe662;</i>' : '<i class="layui-icon">&#xe661;</i>');
 
@@ -27,12 +27,12 @@ layui.use(['jquery','_util','flow','http'],function (exports) {
                 url: '/user/id/' + userId,
                 success(data) {
                     userData = data;
-                    $('.photo').attr('src',userData.photo);
+                    $('.photo').attr('src', userData.photo);
                     $('.username').text(userData.username);
                     $('.info').html(userData.sex ? '<i class="layui-icon">&#xe662;</i>' : '<i class="layui-icon">&#xe661;</i>');
                 },
-                error(status,err) {
-                    layer.msg(err,{time:2000,icon:6});
+                error(status, err) {
+                    layer.msg(err, {time: 2000, icon: 6});
                 }
             })
         }
@@ -40,10 +40,10 @@ layui.use(['jquery','_util','flow','http'],function (exports) {
 
     flow.load({
         elem: '#articles' //流加载容器
-        ,scrollElem: '#articles' //滚动条所在元素，一般不用填，此处只是演示需要。
-        ,done: function(page, next){ //执行下一页的回调
+        , scrollElem: '#articles' //滚动条所在元素，一般不用填，此处只是演示需要。
+        , done: function (page, next) { //执行下一页的回调
             //模拟数据插入
-            setTimeout(function(){
+            setTimeout(function () {
                 let curNum = (page - 1) * 10;
                 http.get({
                     url: `/user/articles/${userData.id}/${curNum}/10`,
@@ -62,15 +62,15 @@ layui.use(['jquery','_util','flow','http'],function (exports) {
                             </li>
                             `);
                         });
-                        next(list.join(''),data.length > 0);
+                        next(list.join(''), data.length > 0);
                     },
-                    error(status,err) {
-                        layer.msg(err,{time:2000,icon:6});
+                    error(status, err) {
+                        layer.msg(err, {time: 2000, icon: 6});
                     }
                 });
             }, 500);
         }
     });
 
-    exports('user-info',{})
+    exports('user-info', {})
 });

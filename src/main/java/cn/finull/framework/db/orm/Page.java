@@ -61,16 +61,13 @@ public class Page<T> extends ArrayList<T> {
             this.nextPage = 1;
             this.firstPage = 1;
             this.lastPage = 1;
-        }
-        else {
+        } else {
             this.totalPages = totalCols / pageSize + (totalCols % pageSize == 0 ? 0 : 1);
             if (curPage > totalPages) {
                 this.curPage = totalPages;
-            }
-            else if (curPage < 1) {
+            } else if (curPage < 1) {
                 this.curPage = 1;
-            }
-            else {
+            } else {
                 this.curPage = curPage;
             }
             this.hasPreviousPage = this.curPage != 1;
@@ -162,8 +159,7 @@ public class Page<T> extends ArrayList<T> {
             this.hasPreviousPage = page.hasPreviousPage;
             this.curPage = page.curPage;
             this.list = page.list;
-        }
-        else {
+        } else {
             this.list = list;
         }
     }

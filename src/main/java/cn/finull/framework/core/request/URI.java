@@ -11,9 +11,9 @@ public class URI {
     private String method;
     private String uri;
 
-    private Map<String,String> uriParams = new HashMap<>();
+    private Map<String, String> uriParams = new HashMap<>();
 
-    public URI(String method,String uri) {
+    public URI(String method, String uri) {
         this.method = method.toUpperCase();
         this.uri = uri;
     }
@@ -31,7 +31,7 @@ public class URI {
             return true;
         }
         if (obj instanceof URI) {
-            URI o = (URI)obj;
+            URI o = (URI) obj;
             if (!method.equalsIgnoreCase(o.method)) {
                 return false;
             }
@@ -40,13 +40,13 @@ public class URI {
             if (rests.length != uris.length) {
                 return false;
             }
-            for (int i = 0; i < rests.length; i ++) {
+            for (int i = 0; i < rests.length; i++) {
                 if (rests[i].startsWith("{") && rests[i].endsWith("}")) {
-                    o.uriParams.put(rests[i].replace("{","").replace("}",""),uris[i]);
+                    o.uriParams.put(rests[i].replace("{", "").replace("}", ""), uris[i]);
                     continue;
                 }
                 if (rests[i].startsWith(":")) {
-                    o.uriParams.put(rests[i].replace(":",""),uris[i]);
+                    o.uriParams.put(rests[i].replace(":", ""), uris[i]);
                     continue;
                 }
                 if (!rests[i].equals(uris[i])) {
@@ -67,7 +67,7 @@ public class URI {
         if (rests.length != uris.length) {
             return false;
         }
-        for (int i = 0; i < rests.length; i ++) {
+        for (int i = 0; i < rests.length; i++) {
             if ((rests[i].startsWith("{") && rests[i].endsWith("}"))
                     || rests[i].startsWith(":")) {
                 continue;
@@ -79,7 +79,7 @@ public class URI {
         return true;
     }
 
-    public Map<String,String> getParams() {
+    public Map<String, String> getParams() {
         return uriParams;
     }
 }

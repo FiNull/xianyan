@@ -9,7 +9,7 @@ public class Element {
     private Type type = Type.NULL;
 
     public void setType(Type type) {
-          this.type = type;
+        this.type = type;
     }
 
     public Type getType() {

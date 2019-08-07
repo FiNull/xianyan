@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
             return null;
         }
         UserVO userVO = new UserVO();
-        ObjectUtil.copyObject(user,userVO);
+        ObjectUtil.copyObject(user, userVO);
         userVO.setPhoto(AppConfig.getHttpPrefix() + userVO.getPhoto());
         userVO.setId(HashIDUtil.encode(user.getId()));
         return userVO;
@@ -40,9 +40,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserVO register(UserBO userBO) {
         User user = new User();
-        ObjectUtil.copyObject(userBO,user);
+        ObjectUtil.copyObject(userBO, user);
         // 密码加密
-        user.setPassword(BCrypt.hashpw(userBO.getPassword(),BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw(userBO.getPassword(), BCrypt.gensalt()));
 
         int result = iUserDao.insert(user);
         UserVO userVO = null;
@@ -57,21 +57,21 @@ public class UserServiceImpl implements IUserService {
     public UserVO login(String username, String password) {
         User user = iUserDao.selectByUserName(username);
         UserVO userVO = null;
-        if (user != null && BCrypt.checkpw(password,user.getPassword())) {
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
             userVO = generatorUserVO(user);
         }
         return userVO;
     }
 
     @Override
-    public UserVO updateUserInfo(UserBO userBO,Integer userId) {
+    public UserVO updateUserInfo(UserBO userBO, Integer userId) {
         User user = iUserDao.selectById(userId);
         UserVO userVO = null;
-        if (BCrypt.checkpw(userBO.getOldPassword(),user.getPassword())) {
+        if (BCrypt.checkpw(userBO.getOldPassword(), user.getPassword())) {
             if (StringUtil.isNotBlank(userBO.getPassword())) {
-                userBO.setPassword(BCrypt.hashpw(userBO.getPassword(),BCrypt.gensalt()));
+                userBO.setPassword(BCrypt.hashpw(userBO.getPassword(), BCrypt.gensalt()));
             }
-            ObjectUtil.copyObject(userBO,user);
+            ObjectUtil.copyObject(userBO, user);
             int result = iUserDao.update(user);
             if (result > 0) {
                 user = iUserDao.selectById(userId);

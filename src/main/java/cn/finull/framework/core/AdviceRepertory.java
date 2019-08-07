@@ -7,7 +7,8 @@ import java.util.function.BiFunction;
 
 public class AdviceRepertory {
 
-    private AdviceRepertory() {}
+    private AdviceRepertory() {
+    }
 
     private static AdviceRepertory repertory;
 
@@ -18,13 +19,13 @@ public class AdviceRepertory {
         return repertory;
     }
 
-    private Map<Class,BiFunction> exceptHandler = new HashMap<>();
+    private Map<Class, BiFunction> exceptHandler = new HashMap<>();
 
-    public <T,R> void add(Class<T> clz,BiFunction<T,HttpServletResponse,R> f) {
+    public <T, R> void add(Class<T> clz, BiFunction<T, HttpServletResponse, R> f) {
         exceptHandler.put(clz, f);
     }
 
-    public <T,R> BiFunction<T,HttpServletResponse,R> handler(Class<T> clz) {
+    public <T, R> BiFunction<T, HttpServletResponse, R> handler(Class<T> clz) {
         return exceptHandler.get(clz);
     }
 

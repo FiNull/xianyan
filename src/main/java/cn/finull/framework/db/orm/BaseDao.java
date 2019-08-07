@@ -5,6 +5,7 @@ import cn.finull.framework.db.annotation.Delete;
 import cn.finull.framework.db.annotation.Insert;
 import cn.finull.framework.db.annotation.Select;
 import cn.finull.framework.db.annotation.Update;
+
 import java.util.List;
 
 public interface BaseDao<T> extends Bean {

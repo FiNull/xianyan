@@ -1,7 +1,7 @@
 /**
  * 登录与注册
  */
-layui.define(['jquery','_util'],function (exports) {
+layui.define(['jquery', '_util'], function (exports) {
 
     const $ = layui.jquery,
         _util = layui._util;
@@ -36,5 +36,5 @@ layui.define(['jquery','_util'],function (exports) {
         }
     });
 
-    exports('header',{});
+    exports('header', {});
 });

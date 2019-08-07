@@ -4,7 +4,7 @@ public final class PageHelper {
 
     private static final ThreadLocal<PageConfig> TL = new ThreadLocal<>();
 
-    public static void startPage(int pageNum,int pageSize) {
+    public static void startPage(int pageNum, int pageSize) {
         PageConfig config = new PageConfig();
         config.pageNum = pageNum;
         config.pageSize = pageSize;

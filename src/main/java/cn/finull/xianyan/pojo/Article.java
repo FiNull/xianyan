@@ -2,6 +2,7 @@ package cn.finull.xianyan.pojo;
 
 import cn.finull.framework.db.annotation.Id;
 import cn.finull.framework.db.annotation.Table;
+
 import java.util.Date;
 
 @Table("articles")

@@ -1,5 +1,4 @@
-
-layui.use(['http','jquery','_util','layer','animations','carousel'],function () {
+layui.use(['http', 'jquery', '_util', 'layer', 'animations', 'carousel'], function () {
     let http = layui.http;
     let $ = layui.$;
     let _util = layui._util;
@@ -10,9 +9,9 @@ layui.use(['http','jquery','_util','layer','animations','carousel'],function () 
     //图片轮播
     carousel.render({
         elem: '#banner'
-        ,width: '750px'
-        ,height: '300px'
-        ,interval: 5000
+        , width: '750px'
+        , height: '300px'
+        , interval: 5000
     });
 
     // 当前页面数据个数
@@ -33,7 +32,7 @@ layui.use(['http','jquery','_util','layer','animations','carousel'],function () 
                 if (!data.length) {
                     let $btn = $('.addition');
                     $btn.text('已经到底部了');
-                    $btn.attr('class','layui-btn layui-btn-disabled');
+                    $btn.attr('class', 'layui-btn layui-btn-disabled');
                     return;
                 }
                 currentNum += data.length;
@@ -56,19 +55,19 @@ layui.use(['http','jquery','_util','layer','animations','carousel'],function () 
                 // 取消所有事件
                 $('.like').unbind();
                 // 点赞文章
-                $('.like').on('click',function () {
+                $('.like').on('click', function () {
                     animations.starArticle(this);
                 });
             },
             error: function (status, err) {
-                layer.msg(err,{time:2000,icon:5});
+                layer.msg(err, {time: 2000, icon: 5});
             }
         });
     }
 
     getArticles();
 
-    $('.addition').on('click',function () {
+    $('.addition').on('click', function () {
         getArticles();
     });
 });

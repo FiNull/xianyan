@@ -26,17 +26,19 @@ public final class StringUtil {
 
     /**
      * 将浮点数转换为字符串，如果浮点数没有小数部分将转换为整数字符串
+     *
      * @param value 浮点数
      * @return 字符串
      */
     public static String toNumber(double value) {
         String num = String.valueOf(value);
-        num = num.contains("e") || !num.endsWith(".0") ? num : String.valueOf((long)value);
+        num = num.contains("e") || !num.endsWith(".0") ? num : String.valueOf((long) value);
         return num;
     }
 
     /**
      * 读取字符流中的字符串
+     *
      * @param reader 字符输入流
      * @return 字符串
      */
@@ -54,6 +56,7 @@ public final class StringUtil {
 
     /**
      * 驼峰命名转下划线
+     *
      * @param value 驼峰命名的字符串
      * @return 下划线字符串
      */
@@ -64,8 +67,7 @@ public final class StringUtil {
             if (Character.isUpperCase(ch)) {
                 result.append("_");
                 result.append(Character.toLowerCase(ch));
-            }
-            else {
+            } else {
                 result.append(ch);
             }
         }
@@ -74,17 +76,17 @@ public final class StringUtil {
 
     /**
      * 下划线命名法转驼峰命名法
+     *
      * @param value 下划线命名法的字符串
      * @return 驼峰命名的字符串
      */
     public static String underlineToHump(String value) {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < value.length(); i ++) {
+        for (int i = 0; i < value.length(); i++) {
             if (value.charAt(i) == '_') {
                 result.append(Character.toUpperCase(value.charAt(i + 1)));
-                i ++;
-            }
-            else {
+                i++;
+            } else {
                 result.append(value.charAt(i));
             }
         }

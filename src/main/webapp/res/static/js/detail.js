@@ -1,4 +1,4 @@
-layui.use(['http','jquery','_util','layer','animations'],function () {
+layui.use(['http', 'jquery', '_util', 'layer', 'animations'], function () {
     let http = layui.http;
     let $ = layui.$;
     let _util = layui._util;
@@ -24,12 +24,12 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
             </div>
             `);
             // 点赞文章
-            $('.article-like').on('click',function () {
+            $('.article-like').on('click', function () {
                 animations.starArticle(this);
             });
         },
-        error: function (status,err) {
-            layer.msg(err,{time:2000,icon:5});
+        error: function (status, err) {
+            layer.msg(err, {time: 2000, icon: 5});
         }
     });
 
@@ -43,7 +43,7 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 if (!data.length) {
                     let $btn = $('.addition');
                     $btn.text('已经到底部了');
-                    $btn.attr('class','layui-btn layui-btn-disabled');
+                    $btn.attr('class', 'layui-btn layui-btn-disabled');
                     return;
                 }
                 currentNum += data.length;
@@ -65,12 +65,12 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 // 取消点击事件
                 $('.comment-like').unbind();
                 // 点赞评论
-                $('.comment-like').on('click',function () {
+                $('.comment-like').on('click', function () {
                     animations.starComment(this);
                 });
             },
-            error: function (status,err) {
-                layer.msg(err,{time:2000,icon:5});
+            error: function (status, err) {
+                layer.msg(err, {time: 2000, icon: 5});
             }
         });
     }
@@ -78,12 +78,12 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
     getComments();
 
     // 加载更多
-    $('.addition').on('click',function () {
+    $('.addition').on('click', function () {
         getComments();
     });
 
     // 点击写评论
-    $('.comment-btn').on('click',function () {
+    $('.comment-btn').on('click', function () {
         let user = layui.sessionData('user');
         if (Object.keys(user).length === 0) {
             // 用户未登录
@@ -94,14 +94,14 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
     });
 
     // 点击提交评论
-    $('.edit-comment-btn').on('click',function () {
+    $('.edit-comment-btn').on('click', function () {
         let value = $('.comment-txt').val();
         if (!value) {
-            layer.msg('评论不能为空',{time:2000,icon:6});
+            layer.msg('评论不能为空', {time: 2000, icon: 6});
             return;
         }
         if (value.length > 200) {
-            layer.msg('评论不能超过200字',{time:2000,icon:6});
+            layer.msg('评论不能超过200字', {time: 2000, icon: 6});
             return;
         }
         http.post({
@@ -125,21 +125,21 @@ layui.use(['http','jquery','_util','layer','animations'],function () {
                 `);
                 $('.comment-box').toggle(500);
                 $('.comment-txt').val('');
-                currentNum ++;
+                currentNum++;
 
                 // 取消点击事件
                 $('.comment-like').unbind();
                 // 点赞评论
-                $('.comment-like').on('click',function () {
+                $('.comment-like').on('click', function () {
                     animations.starComment(this);
                 });
             },
-            error: function (status,err) {
+            error: function (status, err) {
                 if (status === 403) {
                     _util.showLoginPage();
                     return;
                 }
-                layer.msg(err,{time:2000,icon:5});
+                layer.msg(err, {time: 2000, icon: 5});
             }
         })
     });

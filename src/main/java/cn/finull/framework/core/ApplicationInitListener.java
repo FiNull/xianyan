@@ -8,6 +8,7 @@ import cn.finull.framework.except.BadParameterException;
 import cn.finull.framework.except.MethodNotAllowedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -35,7 +36,7 @@ public class ApplicationInitListener implements ServletContextListener {
             try {
                 Class.forName(r).newInstance();
             } catch (Exception e) {
-                LOG.error("Load Repertories failure: {}",e.getMessage());
+                LOG.error("Load Repertories failure: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         });
@@ -44,7 +45,7 @@ public class ApplicationInitListener implements ServletContextListener {
             try {
                 Class.forName(d).newInstance();
             } catch (Exception e) {
-                LOG.error("Load dao failure: {}",e.getMessage());
+                LOG.error("Load dao failure: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         });
@@ -55,22 +56,22 @@ public class ApplicationInitListener implements ServletContextListener {
             try {
                 Class.forName(h).newInstance();
             } catch (Exception e) {
-                LOG.error("Load Handlers failure: {}",e.getMessage());
+                LOG.error("Load Handlers failure: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         });
         // 初始化常规异常处理
         AdviceRepertory repertory = AdviceRepertory.getInstance();
-        repertory.add(BadParameterException.class,(e,r) -> {
+        repertory.add(BadParameterException.class, (e, r) -> {
             r.setStatus(HttpStatus.BAD_REQUEST);
-            Map<String,String> message = new HashMap<>();
-            message.put("message",e.getMessage());
+            Map<String, String> message = new HashMap<>();
+            message.put("message", e.getMessage());
             return message;
         });
-        repertory.add(MethodNotAllowedException.class,(e,r) -> {
+        repertory.add(MethodNotAllowedException.class, (e, r) -> {
             r.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
-            Map<String,String> message = new HashMap<>();
-            message.put("message",e.getMessage());
+            Map<String, String> message = new HashMap<>();
+            message.put("message", e.getMessage());
             return message;
         });
         // 初始化所有异常函数
@@ -79,7 +80,7 @@ public class ApplicationInitListener implements ServletContextListener {
             try {
                 Class.forName(s).newInstance();
             } catch (Exception e) {
-                LOG.error("Load advice failure: {}",e.getMessage());
+                LOG.error("Load advice failure: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         });

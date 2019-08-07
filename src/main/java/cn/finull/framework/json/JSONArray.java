@@ -22,7 +22,7 @@ public class JSONArray {
         Element element = array.get(index);
         if (element == null) return null;
         if (element.getType() == Type.STRING) {
-            return ((Value)element).getString();
+            return ((Value) element).getString();
         }
         return null;
     }
@@ -31,7 +31,7 @@ public class JSONArray {
         Element element = array.get(index);
         if (element == null) return null;
         if (element.getType() == Type.NUMBER) {
-            return ((Value)element).getNumber();
+            return ((Value) element).getNumber();
         }
         return null;
     }
@@ -39,20 +39,20 @@ public class JSONArray {
     public Integer getInt(int index) {
         Double num = getDouble(index);
         if (num == null) return null;
-        return (int)num.doubleValue();
+        return (int) num.doubleValue();
     }
 
     public Long getLong(int index) {
         Double num = getDouble(index);
         if (num == null) return null;
-        return (long)num.doubleValue();
+        return (long) num.doubleValue();
     }
 
     public Boolean getBool(int index) {
         Element element = array.get(index);
         if (element == null) return null;
         if (element.getType() == Type.BOOL) {
-            return ((Value)element).getBool();
+            return ((Value) element).getBool();
         }
         return null;
     }

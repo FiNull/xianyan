@@ -1,12 +1,12 @@
 /**
  * 获取后端数据
  */
-layui.define('jquery',function (exports) {
+layui.define('jquery', function (exports) {
     var $ = layui.$;
 
     var _http = {
         host: 'http://localhost:8080',
-        requestWapper: function(method,content) {
+        requestWapper: function (method, content) {
             this.request({
                 uri: content.url,
                 method: method,
@@ -26,12 +26,12 @@ layui.define('jquery',function (exports) {
                 success: function (result) {
                     header.success(result)
                 },
-                error: function (xhr,status,error) {
+                error: function (xhr, status, error) {
                     if (xhr.status === 201) {
                         header.success(status)
                     }
                     else {
-                        header.error(xhr.status,status)
+                        header.error(xhr.status, status)
                     }
                 }
             })
@@ -40,16 +40,16 @@ layui.define('jquery',function (exports) {
 
     var http = {
         get(content) {
-            _http.requestWapper('GET',content)
+            _http.requestWapper('GET', content)
         },
         post(content) {
-            _http.requestWapper('POST',content)
+            _http.requestWapper('POST', content)
         },
         put(content) {
-            _http.requestWapper('PUT',content)
+            _http.requestWapper('PUT', content)
         },
         delete(content) {
-            _http.requestWapper('DELETE',content)
+            _http.requestWapper('DELETE', content)
         },
         fileUpload(content) {
             _http.request({
@@ -63,6 +63,6 @@ layui.define('jquery',function (exports) {
         }
     };
 
-    exports('http',http);
+    exports('http', http);
 });
 

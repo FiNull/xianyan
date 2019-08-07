@@ -1,21 +1,29 @@
 {
-  "repertories" : ["cn.finull.xianyan.config.BeanConfig"],
-  "handlers"    : ["cn.finull.xianyan.config.HandlerConfig"],
-  "advice"      : ["cn.finull.xianyan.config.AdviceConfig"],
-  "view"        : {
-    "prefix" : "/WEB-INF/template/",
-    "suffix" : ".jsp"
+  "repertories": [
+    "cn.finull.xianyan.config.BeanConfig"
+  ],
+  "handlers": [
+    "cn.finull.xianyan.config.HandlerConfig"
+  ],
+  "advice": [
+    "cn.finull.xianyan.config.AdviceConfig"
+  ],
+  "view": {
+    "prefix": "/WEB-INF/template/",
+    "suffix": ".jsp"
   },
-  "pic"         : {
-    "upload" : "upload/",
-    "prefix" : "http://localhost:8080/upload/"
+  "pic": {
+    "upload": "upload/",
+    "prefix": "http://localhost:8080/upload/"
   },
-  "db"          : {
-    "driver"      : "com.mysql.cj.jdbc.Driver",
-    "url"         : "jdbc:mysql://localhost:3306/xianyan?serverTimezone=Asia/Shanghai",
-    "username"    : "root",
-    "password"    : "root",
-    "pool"        : 20,
-    "dao"         : ["cn.finull.xianyan.config.DaoConfig"]
+  "db": {
+    "driver": "com.mysql.cj.jdbc.Driver",
+    "url": "jdbc:mysql://localhost:3306/xianyan?serverTimezone=Asia/Shanghai",
+    "username": "root",
+    "password": "root",
+    "pool": 20,
+    "dao": [
+      "cn.finull.xianyan.config.DaoConfig"
+    ]
   }
 }

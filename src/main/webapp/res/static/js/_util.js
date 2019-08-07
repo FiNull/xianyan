@@ -1,4 +1,4 @@
-layui.define(['jquery','form','http'],function (exports) {
+layui.define(['jquery', 'form', 'http'], function (exports) {
 
     let $ = layui.$,
         form = layui.form,
@@ -91,7 +91,7 @@ layui.define(['jquery','form','http'],function (exports) {
                 day = date.getDate(),
                 hour = date.getHours(),
                 min = date.getMinutes();
-            return `${year}年${month < 10 ? '0' + month : month}月${day < 10 ? '0' + day : day}日 ${hour < 10 ? '0'+hour : hour}时${min < 10 ? '0'+min : min}分`;
+            return `${year}年${month < 10 ? '0' + month : month}月${day < 10 ? '0' + day : day}日 ${hour < 10 ? '0' + hour : hour}时${min < 10 ? '0' + min : min}分`;
         },
         dateFormat(val) {
             let date = new Date(val);
@@ -101,7 +101,7 @@ layui.define(['jquery','form','http'],function (exports) {
                 hour = date.getHours(),
                 min = date.getMinutes(),
                 sec = date.getSeconds();
-            return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hour < 10 ? '0'+hour : hour}:${min < 10 ? '0'+min : min}:${sec < 10 ? '0'+sec : sec}`;
+            return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min}:${sec < 10 ? '0' + sec : sec}`;
         },
         html2Escape(sHtml) {
             return sHtml.replace(/[<>&"]/g, function (c) {
@@ -116,43 +116,43 @@ layui.define(['jquery','form','http'],function (exports) {
                 area: ['600px', '420px'],
                 content: template
             });
-            $('.show-login').on('click',function () {
+            $('.show-login').on('click', function () {
                 $('#register').hide(300);
                 $('#login').show(300);
             });
-            $('.show-register').on('click',function () {
+            $('.show-register').on('click', function () {
                 $('#login').hide(300);
                 $('#register').show(300);
             });
             // 登录
-            form.on('submit(login)',function (data) {
+            form.on('submit(login)', function (data) {
                 http.post({
                     url: '/user/' + data.field.username,
                     data: JSON.stringify(data.field),
                     success: function (data) {
                         // 存储用户信息
-                        layui.sessionData('user',{
+                        layui.sessionData('user', {
                             key: 'user',
                             value: data
                         });
                         window.location.reload(true);
                     },
-                    error: function (status,err) {
+                    error: function (status, err) {
                         if (status === 406)
-                            layer.msg('用户名或密码不正确！',{time:1000,icon:5});
+                            layer.msg('用户名或密码不正确！', {time: 1000, icon: 5});
                         else
-                            layer.msg(err,{time:1000,icon:5});
+                            layer.msg(err, {time: 1000, icon: 5});
                     }
                 });
                 return false;
             });
             // 注册
-            form.on('submit(register)',function (data) {
+            form.on('submit(register)', function (data) {
 
                 let userInfo = data.field;
 
                 if (userInfo.repassword != userInfo.password) {
-                    layer.msg('前后密码不一致',{time:1000,icon:5});
+                    layer.msg('前后密码不一致', {time: 1000, icon: 5});
                     return false;
                 }
 
@@ -166,19 +166,19 @@ layui.define(['jquery','form','http'],function (exports) {
                             data: JSON.stringify(userInfo),
                             success: function (data) {
                                 // 存储用户信息
-                                layui.sessionData('user',{
+                                layui.sessionData('user', {
                                     key: 'user',
                                     value: data
                                 });
                                 window.location.reload(true);
                             },
-                            error: function (status,err) {
-                                layer.msg('注册失败',{time: 1000,icon:5});
+                            error: function (status, err) {
+                                layer.msg('注册失败', {time: 1000, icon: 5});
                             }
                         });
                     },
-                    error: function (status,err) {
-                        layer.msg('注册失败，用户名已存在',{time: 1000,icon:5});
+                    error: function (status, err) {
+                        layer.msg('注册失败，用户名已存在', {time: 1000, icon: 5});
                     }
                 });
                 return false;
@@ -186,5 +186,5 @@ layui.define(['jquery','form','http'],function (exports) {
         }
     };
 
-    exports('_util',_util);
+    exports('_util', _util);
 });

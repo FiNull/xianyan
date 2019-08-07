@@ -2,6 +2,7 @@ package cn.finull.framework.db;
 
 import cn.finull.framework.config.AppConfig;
 import cn.finull.framework.core.bean.Bean;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.lang.reflect.Proxy;
@@ -15,7 +16,7 @@ import java.util.stream.IntStream;
 /**
  * 数据源
  */
-public class BasicDataSource implements DataSource,Bean {
+public class BasicDataSource implements DataSource, Bean {
 
     @Override
     public Class getClassKey() {
@@ -27,7 +28,7 @@ public class BasicDataSource implements DataSource,Bean {
 
     static {
         // 向连接池中添加连接
-        IntStream.range(0,AppConfig.getDBPool())
+        IntStream.range(0, AppConfig.getDBPool())
                 .forEach(i -> DATA_SOURCE.add(JDBCConnection.getInstance().getConnection()));
     }
 
@@ -35,22 +36,20 @@ public class BasicDataSource implements DataSource,Bean {
     public Connection getConnection() {
         if (DATA_SOURCE.isEmpty()) {
             throw new RuntimeException("Unable get database connection!");
-        }
-        else {
+        } else {
             Connection conn = DATA_SOURCE.remove(0);
             // 对Connection 进行动态代理
             return (Connection) Proxy.newProxyInstance(conn.getClass().getClassLoader(),
-                    conn.getClass().getInterfaces(), (p,m,a) -> {
+                    conn.getClass().getInterfaces(), (p, m, a) -> {
                         Object re = null;
                         if ("close".equals(m.getName())) {
                             // 用户调用close()方法时步关闭连接，而是将连接放回连接池
                             DATA_SOURCE.add(conn);
-                        }
-                        else {
-                            re = m.invoke(conn,a);
+                        } else {
+                            re = m.invoke(conn, a);
                         }
                         return re;
-            });
+                    });
         }
     }
 

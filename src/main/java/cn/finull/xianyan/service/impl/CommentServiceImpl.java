@@ -12,6 +12,7 @@ import cn.finull.xianyan.pojo.User;
 import cn.finull.xianyan.pojo.UserCommentStar;
 import cn.finull.xianyan.service.ICommentService;
 import cn.finull.xianyan.vo.CommentVO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class CommentServiceImpl implements ICommentService {
     private CommentVO generatorCommentVO(Comment comment, String userId) {
         CommentVO commentVO = new CommentVO();
 
-        ObjectUtil.copyObject(comment,commentVO);
+        ObjectUtil.copyObject(comment, commentVO);
 
         commentVO.setId(HashIDUtil.encode(comment.getId()));
         commentVO.setAuthorId(HashIDUtil.encode(comment.getAuthorId()));
@@ -54,10 +55,10 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public List<CommentVO> findAll(String aId, int curNum, int len, String userId) {
         List<Comment> commentList = iCommentDao.selectAll(
-                (int)HashIDUtil.decode(aId),curNum,len);
+                (int) HashIDUtil.decode(aId), curNum, len);
         List<CommentVO> commentVOList = new ArrayList<>();
         for (Comment comment : commentList) {
-            commentVOList.add(generatorCommentVO(comment,userId));
+            commentVOList.add(generatorCommentVO(comment, userId));
         }
         return commentVOList;
     }
@@ -66,8 +67,8 @@ public class CommentServiceImpl implements ICommentService {
     public boolean starComment(String userId, String cId) {
 
         UserCommentStar userCommentStar = iUserCommentStarDao
-                .selectByUserIdAndCId((int)HashIDUtil.decode(userId),
-                        (int)HashIDUtil.decode(cId));
+                .selectByUserIdAndCId((int) HashIDUtil.decode(userId),
+                        (int) HashIDUtil.decode(cId));
 
         Comment comment = iCommentDao.selectById(HashIDUtil.decode(cId));
         if (comment == null || !comment.getDelStatus()) {
@@ -78,18 +79,16 @@ public class CommentServiceImpl implements ICommentService {
 
         if (userCommentStar == null) {
             userCommentStar = new UserCommentStar();
-            userCommentStar.setAuthorId((int)HashIDUtil.decode(userId));
-            userCommentStar.setCommentId((int)HashIDUtil.decode(cId));
+            userCommentStar.setAuthorId((int) HashIDUtil.decode(userId));
+            userCommentStar.setCommentId((int) HashIDUtil.decode(cId));
             userCommentStar.setStarStatus(true);
             comment.setStarNum(comment.getStarNum() + 1);
             result = iUserCommentStarDao.insert(userCommentStar);
-        }
-        else {
+        } else {
             userCommentStar.setStarStatus(!userCommentStar.getStarStatus());
             if (userCommentStar.getStarStatus()) {
                 comment.setStarNum(comment.getStarNum() + 1);
-            }
-            else {
+            } else {
                 comment.setStarNum(comment.getStarNum() - 1);
             }
             result = iUserCommentStarDao.update(userCommentStar);
@@ -99,10 +98,10 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public CommentVO save(CommentBO commentBO,String userId) {
+    public CommentVO save(CommentBO commentBO, String userId) {
         Comment comment = new Comment();
-        comment.setArticleId((int)HashIDUtil.decode(commentBO.getArticleId()));
-        comment.setAuthorId((int)HashIDUtil.decode(userId));
+        comment.setArticleId((int) HashIDUtil.decode(commentBO.getArticleId()));
+        comment.setAuthorId((int) HashIDUtil.decode(userId));
         comment.setContent(commentBO.getContent());
 
         int result = iCommentDao.insert(comment);
@@ -111,7 +110,7 @@ public class CommentServiceImpl implements ICommentService {
         }
 
         comment = iCommentDao.selectById(comment.getId());
-        return generatorCommentVO(comment,userId);
+        return generatorCommentVO(comment, userId);
     }
 
     @Override
