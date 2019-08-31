@@ -8,3 +8,6 @@ jdk1.8+
 maven3+  
 tomcat8+  
 mysql8
+
+### 自制框架所在包
+cn.finull.framework
